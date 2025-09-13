@@ -8,6 +8,9 @@ import Hero from './components/home/Hero'
 import HowItWorks from './components/home/HowItWorks'
 import Testimonials from './components/home/Testamonials'
 import Choose from './components/home/Choose'   // ✅ Fixed uppercase
+import SoilDetection from "./components/home/Soil-Detection";
+import MarketPrice from "./components/home/MarketPrice";
+import Diseasedetection from "./components/home/Disease-Detection";
 
 function App() {
   return (
@@ -21,7 +24,10 @@ function App() {
           <Route path="howitworks" element={<HowItWorks />} />
           <Route path="testimonials" element={<Testimonials />} />
           <Route path="hero" element={<Hero />} />
+          <Route path="/soil-detection" element={<SoilDetection />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="/market-price" element={<MarketPrice/>} />
+             <Route path="/disease-detection" element={<Diseasedetection/>} />
         </Route>
       </Routes>
     </Router>
