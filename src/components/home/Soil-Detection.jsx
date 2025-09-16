@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SoilDetection() {
   const [activeTab, setActiveTab] = useState("image");
@@ -12,7 +13,14 @@ export default function SoilDetection() {
     moisture: "",
   });
   const [result, setResult] = useState("");
+    const navigate = useNavigate();
 
+
+    
+ const handleDetect=()=>{
+    navigate('/result')
+  }
+   
   // Handle File Upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -31,28 +39,28 @@ export default function SoilDetection() {
   };
 
   // Fake Detection (Replace with API/ML model)
-  const handleDetect = (type) => {
-    if (type === "image" && selectedFile) {
-      setResult("📷 Soil detected from Image: Black Soil 🌱 (Best for Cotton & Oilseeds)");
-    } else if (type === "form") {
-      const { ph, nitrogen, phosphorus, potassium, moisture } = formData;
-      if (!ph || !nitrogen || !phosphorus || !potassium || !moisture) {
-        alert("⚠️ Please fill all form fields!");
-        return;
-      }
-      setResult(
-        `🧪 Soil detected from Data Input:
-        - pH: ${ph}
-        - Nitrogen: ${nitrogen}
-        - Phosphorus: ${phosphorus}
-        - Potassium: ${potassium}
-        - Moisture: ${moisture}
-        👉 Likely Soil Type: Alluvial Soil (Best for Wheat & Rice)`
-      );
-    } else {
-      alert("Please provide input first!");
-    }
-  };
+  // const handleDetect = (type) => {
+  //   if (type === "image" && selectedFile) {
+  //     setResult("📷 Soil detected from Image: Black Soil 🌱 (Best for Cotton & Oilseeds)");
+  //   } else if (type === "form") {
+  //     const { ph, nitrogen, phosphorus, potassium, moisture } = formData;
+  //     if (!ph || !nitrogen || !phosphorus || !potassium || !moisture) {
+  //       alert("⚠️ Please fill all form fields!");
+  //       return;
+  //     }
+  //     setResult(
+  //       `🧪 Soil detected from Data Input:
+  //       - pH: ${ph}
+  //       - Nitrogen: ${nitrogen}
+  //       - Phosphorus: ${phosphorus}
+  //       - Potassium: ${potassium}
+  //       - Moisture: ${moisture}
+  //       👉 Likely Soil Type: Alluvial Soil (Best for Wheat & Rice)`
+  //     );
+  //   } else {
+  //     alert("Please provide input first!");
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center py-10 px-4">
@@ -190,7 +198,7 @@ export default function SoilDetection() {
             </form>
 
             <button
-              onClick={() => handleDetect("form")}
+              onClick={handleDetect}
               className="mt-6 w-full bg-blue-800  hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Data

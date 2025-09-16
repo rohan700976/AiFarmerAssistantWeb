@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -6,7 +7,7 @@ const Header = () => {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 w-full relative z-50">
+    <nav className="bg-white border-gray-200  w-full relative z-50">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-3">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3 pl-8 rtl:space-x-reverse">
@@ -15,7 +16,7 @@ const Header = () => {
             className="h-8"
             alt="Logo"
           />
-          <span className="self-center text-4xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-4xl font-semibold whitespace-nowrap text-green-400">
             CropApp
           </span>
         </a>
@@ -49,22 +50,34 @@ const Header = () => {
               </div>
               <ul className="py-2">
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
                     Dashboard
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
                     Settings
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
                     Earnings
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
                     Sign out
                   </a>
                 </li>
@@ -99,28 +112,60 @@ const Header = () => {
 
         {/* Main menu */}
         <div
-          className={`items-center justify-between text-xl w-full md:flex md:w-auto md:order-1 ${
+          className={`text-xl w-full md:flex md:w-auto ml-100 ${
             isMobileMenuOpen ? "" : "hidden"
           }`}
           id="navbar-user"
         >
-          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4  rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-white  text-gray-900">
             <li>
-              <a href="/" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `block py-1 rounded-sm px-4 p-0 ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900  hover:text-green-600"
+                  }`
+                }
+              >
                 Home
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500">
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `block py-1 rounded-sm px-4 p-0 ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900 hover:text-green-600"
+                  }`
+                }
+              >
                 About
-              </a>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/weather"
+                className={({ isActive }) =>
+                  `block py-1 rounded-sm px-4 p-0 ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900  hover:text-green-600"
+                  }`
+                }
+              >
+                Weather
+              </NavLink>
             </li>
 
             {/* Services dropdown */}
             <li className="relative">
               <button
                 onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
-                className="flex items-center py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600 md:hover:bg-transparent p-0"
               >
                 Services
                 <svg
@@ -137,48 +182,102 @@ const Header = () => {
               {isServicesDropdownOpen && (
                 <ul className="absolute left-0 mt-2 w-56 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600">
                   <li>
-                    <a href="/soil-detection" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
-                      Soil-Detection
-                    </a>
+                    <NavLink
+                      to="/soil-detection"
+                      className={({ isActive }) =>
+                        `block px-4 py-2 rounded-sm ${
+                          isActive
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                        }`
+                      }
+                    >
+                      Soil Detection
+                    </NavLink>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
+                    >
                       Farmer Implementing Crop
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
+                    >
                       AI
                     </a>
                   </li>
                   <li>
-                    <a href="/disease-detection" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <NavLink
+                      to="/disease-detection"
+                      className={({ isActive }) =>
+                        `block px-4 py-2 rounded-sm ${
+                          isActive
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                        }`
+                      }
+                    >
                       Disease Treatment
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
+                    >
                       Crop Health
                     </a>
                   </li>
                   <li>
-                    <a href="/market-price" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                    <NavLink
+                      to="/market-price"
+                      className={({ isActive }) =>
+                        `block px-4 py-2 rounded-sm ${
+                          isActive
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                        }`
+                      }
+                    >
                       Market Price
-                    </a>
+                    </NavLink>
                   </li>
                 </ul>
               )}
             </li>
 
             <li>
-              <a href="#" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500">
+              <NavLink
+                to="/pricing"
+                className={({ isActive }) =>
+                  `block py-1 rounded-sm px-4 p-0 ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900  hover:text-green-600"
+                  }`
+                }
+              >
                 Pricing
-              </a>
+              </NavLink>
             </li>
             <li>
-              <a href="#" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500">
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `block py-1 rounded-sm px-4 p-0 ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900 hover:text-green-600"
+                  }`
+                }
+              >
                 Contact
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>
