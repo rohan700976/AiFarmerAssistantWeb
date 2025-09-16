@@ -11,6 +11,8 @@ import Choose from './components/home/Choose'   // ✅ Fixed uppercase
 import SoilDetection from "./components/home/Soil-Detection";
 import MarketPrice from "./components/home/MarketPrice";
 import Diseasedetection from "./components/home/Disease-Detection";
+import Weather from './pages/Weather'
+import SoilRecommended from './services/SoilRecommended'
 
 function App() {
   return (
@@ -27,7 +29,9 @@ function App() {
           <Route path="/soil-detection" element={<SoilDetection />} />
           <Route path="contact" element={<Contact />} />
           <Route path="/market-price" element={<MarketPrice/>} />
-             <Route path="/disease-detection" element={<Diseasedetection/>} />
+          <Route path="/disease-detection" element={<Diseasedetection/>} />
+          <Route path='/weather' element={<Weather/>}/>
+          <Route path='/result' element={<SoilRecommended/>}/>
         </Route>
       </Routes>
     </Router>
