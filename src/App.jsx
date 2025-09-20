@@ -13,6 +13,7 @@ import MarketPrice from "./components/home/MarketPrice";
 import Diseasedetection from "./components/home/Disease-Detection";
 import Weather from './pages/Weather'
 import SoilRecommended from './services/SoilRecommended'
+import FarmerChatbot from './services/FarmerChatBot'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/disease-detection" element={<Diseasedetection/>} />
           <Route path='/weather' element={<Weather/>}/>
           <Route path='/result' element={<SoilRecommended/>}/>
+          <Route path='/ai-chatbot' element={<FarmerChatbot/>}/>
         </Route>
       </Routes>
     </Router>

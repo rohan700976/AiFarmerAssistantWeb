@@ -63,8 +63,8 @@ export default function SoilDetection() {
   // };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center py-10 px-4">
-      <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
+    <div className="min-h-screen bg-green-50  flex flex-col items-center py-10 px-4">
+      <h1 className="text-3xl font-bold text-green-700  mb-8">
         Soil Detection
       </h1>
 
@@ -74,8 +74,8 @@ export default function SoilDetection() {
           onClick={() => setActiveTab("image")}
           className={`px-6 py-3 text-sm font-medium transition ${
             activeTab === "image"
-              ? "bg-blue-800  hover:bg-blue-600 text-white"
-              : "bg-white text-gray-700 dark:bg-gray-700  hover:bg-blue-500 dark:text-gray-300"
+              ?   "bg-green-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
           AI Image Analysis
@@ -84,8 +84,8 @@ export default function SoilDetection() {
           onClick={() => setActiveTab("form")}
           className={`px-6 py-3 text-sm font-medium transition ${
             activeTab === "form"
-              ? "bg-blue-800  hover:bg-blue-600 text-white"
-              : "bg-white text-gray-700 dark:bg-gray-700  hover:bg-blue-500 dark:text-gray-300"
+              ?   "bg-green-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
           Enter Soil Data
@@ -93,7 +93,7 @@ export default function SoilDetection() {
       </div>
 
       {/* Content */}
-      <div className="w-full max-w-3xl bg-white dark:bg-gray-800 shadow-lg rounded-xl p-8 text-center">
+      <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center">
         {activeTab === "image" ? (
           <>
             {/* IMAGE UPLOAD SECTION */}
@@ -112,10 +112,10 @@ export default function SoilDetection() {
                     d="M3 7v4a1 1 0 001 1h3m10-5h4a1 1 0 011 1v4m-5 10h4a1 1 0 001-1v-4M7 21H3a1 1 0 01-1-1v-4m5-10l5-5m0 0l5 5m-5-5v12"
                   />
                 </svg>
-                <p className="text-lg font-medium text-gray-700 dark:text-gray-200">
+                <p className="text-lg font-medium text-black ">
                   Upload soil image for AI diagnosis
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-700 ">
                   Supported formats: JPG, PNG, WebP (Max 5MB)
                 </p>
                 <input
@@ -127,7 +127,7 @@ export default function SoilDetection() {
                 />
                 <label
                   htmlFor="soil-upload"
-                  className="cursor-pointer bg-blue-800 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium"
+                  className="cursor-pointer bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium"
                 >
                   Choose File
                 </label>
@@ -146,7 +146,7 @@ export default function SoilDetection() {
 
             <button
               onClick={() => handleDetect("image")}
-              className="mt-6 w-full bg-blue-800 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition"
+              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Image
             </button>
@@ -161,7 +161,7 @@ export default function SoilDetection() {
                 value={formData.ph}
                 onChange={handleChange}
                 placeholder="pH Value"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
               <input
                 type="number"
@@ -169,7 +169,7 @@ export default function SoilDetection() {
                 value={formData.nitrogen}
                 onChange={handleChange}
                 placeholder="Nitrogen Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
               <input
                 type="number"
@@ -177,7 +177,7 @@ export default function SoilDetection() {
                 value={formData.phosphorus}
                 onChange={handleChange}
                 placeholder="Phosphorus Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
               <input
                 type="number"
@@ -185,7 +185,7 @@ export default function SoilDetection() {
                 value={formData.potassium}
                 onChange={handleChange}
                 placeholder="Potassium Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
               <input
                 type="number"
@@ -193,13 +193,13 @@ export default function SoilDetection() {
                 value={formData.moisture}
                 onChange={handleChange}
                 placeholder="Moisture %"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
             </form>
 
             <button
               onClick={handleDetect}
-              className="mt-6 w-full bg-blue-800  hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition"
+              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Data
             </button>

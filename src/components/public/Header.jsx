@@ -134,7 +134,7 @@ const Header = () => {
             </li>
             <li>
               <NavLink
-                to="/about"
+                to="/ai-chatbot"
                 className={({ isActive }) =>
                   `block py-1 rounded-sm px-4 p-0 ${
                     isActive
@@ -143,7 +143,7 @@ const Header = () => {
                   }`
                 }
               >
-                About
+                Ai-Chatbot
               </NavLink>
             </li>
             <li>
@@ -184,6 +184,7 @@ const Header = () => {
                   <li>
                     <NavLink
                       to="/soil-detection"
+                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
@@ -195,25 +196,33 @@ const Header = () => {
                       Soil Detection
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="#"
                       className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
                     >
                       Farmer Implementing Crop
                     </a>
-                  </li>
+                  </li> */}
                   <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
+                    <NavLink
+                      to="/ai-chatbot"
+                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                      className={({ isActive }) =>
+                        `block px-4 py-2 rounded-sm ${
+                          isActive
+                            ? "bg-green-600 text-white"
+                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                        }`
+                      }
                     >
-                      AI
-                    </a>
+                     Ai-Chatbot
+                    </NavLink>
                   </li>
                   <li>
                     <NavLink
                       to="/disease-detection"
+                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
@@ -225,17 +234,18 @@ const Header = () => {
                       Disease Treatment
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="#"
                       className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
                     >
                       Crop Health
                     </a>
-                  </li>
+                  </li> */}
                   <li>
                     <NavLink
                       to="/market-price"
+                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
@@ -251,7 +261,7 @@ const Header = () => {
               )}
             </li>
 
-            <li>
+            {/* <li>
               <NavLink
                 to="/pricing"
                 className={({ isActive }) =>
@@ -264,7 +274,7 @@ const Header = () => {
               >
                 Pricing
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/contact"
