@@ -20,27 +20,43 @@ export default function SoilDetection() {
     const navigate = useNavigate();
 
     const handleSoilDetection = async () => {
-      try {
-        const response = await axios.post(`http://localhost:8000/ai/soil/crop/recommendation`, {
-          N: formData.nitrogen,
-          P: formData.phosphorus,
-          K: formData.potassium,
-          temp: formData.temp,
-          hum: formData.hum,
-          ph: formData.ph,
-          rain: formData.rain,
-        });
-        if(response.status === 200){
-          console.log(response.data);
-          const reco = response.data.response;
-          setRecoCrop(reco);
-          navigate(`/result/rice`, { state: { formData } });
+  try {
+    const response = await axios.post(`http://localhost:8000/ai/soil/crop/recommendation`, {
+      N: formData.nitrogen,
+      P: formData.phosphorus,
+      K: formData.potassium,
+      temp: formData.temp,
+      hum: formData.hum,
+      ph: formData.ph,
+      rain: formData.rain,
+    });
+
+    if (response.status === 200) {
+      // console.log("Raw:", response.data.response);
+      // console.log("Type before parsing:", Object.prototype.toString.call(response.data.response));
+
+      // ✅ Convert string to array
+      let reco = response.data.response;
+      if (typeof reco === "string") {
+        try {
+          reco = JSON.parse(reco);
+        } catch (e) {
+          console.error("Invalid JSON format from backend:", reco);
         }
-      } catch (error) {
-        console.error(error);
-        
       }
+
+      // console.log("Type after parsing:", Object.prototype.toString.call(reco)); // should be [object Array]
+      // console.log("Parsed array:", reco);
+
+      setRecoCrop(reco);
+      // console.log(recoCrop[3]);
+      navigate("/result", { state: { recoCrop: reco, formData } });
     }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const handleDetect = (recoCrop) => {
   navigate(`/result/${recoCrop}`, { state: { formData } });
 };
