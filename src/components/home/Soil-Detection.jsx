@@ -17,10 +17,9 @@ export default function SoilDetection() {
 
 
     
- const handleDetect=()=>{
-    navigate('/result')
-  }
-   
+const handleDetect = () => {
+  navigate("/result", { state: { formData } });
+};
   // Handle File Upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -63,7 +62,7 @@ export default function SoilDetection() {
   // };
 
   return (
-    <div className="min-h-screen bg-green-50  flex flex-col items-center py-10 px-4">
+    <div className="min-h-screen bg-green-50  flex flex-col items-center pt-30 px-4 ">
       <h1 className="text-3xl font-bold text-green-700  mb-8">
         Soil Detection
       </h1>

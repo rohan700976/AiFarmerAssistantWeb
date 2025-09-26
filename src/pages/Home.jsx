@@ -5,16 +5,24 @@ import Hero from '../components/home/Hero'
 import HowItWorks from '../components/home/HowItWorks'
 import Testimonials from '../components/home/Testamonials'
 import Choose from '../components/home/Choose'
+import FarmingSolutions from './FarmingSolutions'
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+
+
 
 function Home() {
   
   return (
-    <div>
+    <div className=''>
       <Hero/>
-      <About/>
+       <br />
+      
+      <FarmingSolutions/>
+      {/* <About/> */}
       <Choose/>
-      <HowItWorks/>
+      {/* <HowItWorks/> */}
       <Contact/>
+      
       <Testimonials/>
     </div>
   )

@@ -1,13 +1,24 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import axios from 'axios'
 import WeatherCard from '../components/cards/WeatherCard'
 import WeatherDayCard from '../components/cards/WeatherDayCard'
 
 function Weather() {
     const days = ["Today", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    useEffect(() => {
+      console.log("hello");
+     const handleWeateherReport=async()=>{
+        const response= await axios.get('http://10.18.65.11:8000/weather/next/7days?city=haridwar');
+        // console.log(response.data);
+        console.log(response.data.slice(0,7));
+     }
+    handleWeateherReport();
+    }, [])
+    
 
     return (
         <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mt-22">
 
                 {/* Left Section */}
                 <div className="lg:col-span-2 flex flex-col">

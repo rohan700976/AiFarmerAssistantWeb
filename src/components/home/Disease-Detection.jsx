@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DiseaseDetection() {
   const [activeTab, setActiveTab] = useState("upload");
+  const navigate=useNavigate();
+
+  const handleClick=()=>{
+    navigate('/disease-detail');
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 p-6">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6">
+      <div className="max-w-3xl h-[580px] mx-auto bg-white rounded-2xl shadow-xl p-6 mt-20 py-10">
         {/* Header */}
-        <h1 className="text-2xl font-bold text-green-700 mb-6 text-center">
+        <h1 className="text-2xl font-bold text-green-700 mb-10 text-center">
           🌱 Plant Disease Detection
         </h1>
 
@@ -38,7 +44,7 @@ export default function DiseaseDetection() {
         {/* Upload Image Section */}
         {activeTab === "upload" && (
           <div className="text-center">
-            <label className="block mb-4 text-lg font-medium text-gray-700">
+            <label className="block mb-8 text-lg font-medium text-gray-700">
               Upload plant leaf image for detection
             </label>
             <input
@@ -46,7 +52,9 @@ export default function DiseaseDetection() {
               accept="image/*"
               className="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
             />
-            <button className="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
+            <button 
+            onClick={handleClick}
+            className="mt-8 px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
               Detect Disease
             </button>
           </div>
@@ -54,9 +62,9 @@ export default function DiseaseDetection() {
 
         {/* Form Section */}
         {activeTab === "form" && (
-          <form className="space-y-4">
+          <form className="space-y-4 mb-6">
             <div>
-              <label className="block mb-2 text-gray-700">Leaf Color</label>
+              <label className="block mb-1 text-gray-700">Leaf Color</label>
               <input
                 type="text"
                 placeholder="e.g., Yellow, Brown"
@@ -80,6 +88,7 @@ export default function DiseaseDetection() {
               ></textarea>
             </div>
             <button
+              
               type="submit"
               className="w-full py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
             >

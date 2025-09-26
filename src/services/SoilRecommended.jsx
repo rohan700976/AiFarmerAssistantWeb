@@ -1,5 +1,7 @@
 import React from 'react'
 import wheatImage from '../assets/images/wheatImage.jpg'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function SoilRecommended() {
       const idealSoil = {
@@ -14,8 +16,48 @@ function SoilRecommended() {
     return value >= idealSoil[param].min && value <= idealSoil[param].max;
   };
 
+   const location = useLocation();
+    const { formData } = location.state || {};
+    console.log(formData)
+
+    const [crop, SetCrop] = useState("");
+    const navigate=useNavigate();
+
+    const handelSearch = () => {
+  if (!crop) {
+    alert("⚠️ Please enter a crop name first!");
+    return;
+  }
+  navigate("/desire-crop", { state: { crop, formData } });
+};
+
+    // console.log(crop);
+
   return (
-   <div className="p-6 max-w-5xl mx-auto space-y-8">
+   <div className="p-6 max-w-5xl mx-auto space-y-8 mt-20">
+
+   <div className="flex flex-col items-center gap-6 mt-5 ">
+  <h1 className="text-4xl text-green-600 drop-shadow-md text-center font-bold">
+    What You Grow
+  </h1>
+
+  <div className="flex items-center w-full max-w-md">
+    <input
+      type="text"
+       value={crop}
+      onChange={(e) => SetCrop(e.target.value)}
+      placeholder="Write your desired crop"
+      className="flex-1 h-12 px-4 rounded-l-xl border border-gray-300 focus:outline-none focus:ring-0 focus:ring-green-500 shadow-sm"
+    />
+  
+    <button 
+    onClick={handelSearch}
+    className="h-12 px-6 bg-green-600 text-white font-semibold rounded-r-xl hover:bg-green-700 transition-all shadow-md">
+      Search
+    </button>
+  </div>
+</div>
+
       {/* Recommended Crop Card */}
       <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
         <img
@@ -68,32 +110,32 @@ function SoilRecommended() {
                
                <tbody>
   <tr className="bg-green-50">
-    <td className="border-b border-gray-200 p-2">pH</td>
-    <td className="border-b border-gray-200 p-2">6.5</td>
+    <td className="border-b border-gray-200 p-2">ph</td>
+    <td className="border-b border-gray-200 p-2">{formData.ph}</td>
     <td className="border-b border-gray-200 p-2">6.0 - 7.0</td>
     <td className="border-b border-gray-200 p-2">✅ Match</td>
   </tr>
   <tr className="bg-green-50">
     <td className="border-b border-gray-200 p-2">Nitrogen</td>
-    <td className="border-b border-gray-200 p-2">45</td>
+    <td className="border-b border-gray-200 p-2">{formData.nitrogen}</td>
     <td className="border-b border-gray-200 p-2">40 - 60</td>
     <td className="border-b border-gray-200 p-2">✅ Match</td>
   </tr>
   <tr className="bg-green-50">
     <td className="border-b border-gray-200 p-2">Phosphorus</td>
-    <td className="border-b border-gray-200 p-2">35</td>
+    <td className="border-b border-gray-200 p-2">{formData.phosphorus}</td>
     <td className="border-b border-gray-200 p-2">30 - 50</td>
     <td className="border-b border-gray-200 p-2">✅ Match</td>
   </tr>
   <tr className="bg-green-50">
     <td className="border-b border-gray-200 p-2">Potassium</td>
-    <td className="border-b border-gray-200 p-2">25</td>
+    <td className="border-b border-gray-200 p-2">{formData.potassium}</td>
     <td className="border-b border-gray-200 p-2">20 - 40</td>
     <td className="border-b border-gray-200 p-2">✅ Match</td>
   </tr>
   <tr className="bg-green-50">
     <td className="border-b border-gray-200 p-2">Moisture</td>
-    <td className="border-b border-gray-200 p-2">40%</td>
+    <td className="border-b border-gray-200 p-2">{formData.moisture}</td>
     <td className="border-b border-gray-200 p-2">35% - 45%</td>
     <td className="border-b border-gray-200 p-2">✅ Match</td>
   </tr>
