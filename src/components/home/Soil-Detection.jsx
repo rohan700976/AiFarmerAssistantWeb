@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,20 +6,43 @@ export default function SoilDetection() {
   const [activeTab, setActiveTab] = useState("image");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const[recoCrop, setRecoCrop] = useState([]);
   const [formData, setFormData] = useState({
     ph: "",
     nitrogen: "",
     phosphorus: "",
     potassium: "",
-    moisture: "",
+    temp: "",
+    hum: "",
+    rain: "",
   });
   const [result, setResult] = useState("");
     const navigate = useNavigate();
 
-
-    
-const handleDetect = () => {
-  navigate("/result", { state: { formData } });
+    const handleSoilDetection = async () => {
+      try {
+        const response = await axios.post(`http://localhost:8000/ai/soil/crop/recommendation`, {
+          N: formData.nitrogen,
+          P: formData.phosphorus,
+          K: formData.potassium,
+          temp: formData.temp,
+          hum: formData.hum,
+          ph: formData.ph,
+          rain: formData.rain,
+        });
+        if(response.status === 200){
+          console.log(response.data);
+          const reco = response.data.response;
+          setRecoCrop(reco);
+          navigate(`/result/rice`, { state: { formData } });
+        }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+const handleDetect = (recoCrop) => {
+  navigate(`/result/${recoCrop}`, { state: { formData } });
 };
   // Handle File Upload
   const handleFileChange = (e) => {
@@ -188,16 +212,32 @@ const handleDetect = () => {
               />
               <input
                 type="number"
-                name="moisture"
-                value={formData.moisture}
+                name="temp"
+                value={formData.temp}
                 onChange={handleChange}
-                placeholder="Moisture %"
+                placeholder="Temperature (°C)"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
+              />
+              <input
+                type="number"
+                name="hum"
+                value={formData.hum}
+                onChange={handleChange}
+                placeholder="Humidity (%)"
+                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
+              />
+              <input
+                type="number"
+                name="rain"
+                value={formData.rain}
+                onChange={handleChange}
+                placeholder="Rainfall (mm)"
                 className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
               />
             </form>
 
             <button
-              onClick={handleDetect}
+              onClick={handleSoilDetection}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Data
