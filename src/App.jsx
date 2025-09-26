@@ -34,7 +34,7 @@ function App() {
           <Route path="/market-price" element={<MarketPrice/>} />
           <Route path="/disease-detection" element={<Diseasedetection/>} />
           <Route path='/weather' element={<Weather/>}/>
-          <Route path='/result/:recoCrop' element={<SoilRecommended/>}/>
+          <Route path='/result' element={<SoilRecommended/>}/>
           <Route path='/ai-chatbot' element={<FarmerChatbot/>}/>
           <Route path='desire-crop' element={<DesireCrop/>}/>
           <Route path='/disease-detail' element={<DiseaseDetails/>}/>
