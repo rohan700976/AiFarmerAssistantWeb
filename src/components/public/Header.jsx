@@ -7,7 +7,7 @@ const Header = () => {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-gray-200  w-full relative z-50">
+    <nav className="fixed top-0 left-0 w-full bg-white border-gray-200 shadow-md h-18 flex items-center z-50">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-3">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3 pl-8 rtl:space-x-reverse">
@@ -39,7 +39,7 @@ const Header = () => {
 
           {/* User Dropdown */}
           {isUserDropdownOpen && (
-            <div className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600 absolute right-4 top-14">
+            <div className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600 absolute right-4 top-16">
               <div className="px-4 py-3">
                 <span className="block text-sm text-gray-900 dark:text-white">
                   Bonnie Green
@@ -89,7 +89,7 @@ const Header = () => {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
           >
             <span className="sr-only">Open main menu</span>
             <svg
@@ -117,7 +117,7 @@ const Header = () => {
           }`}
           id="navbar-user"
         >
-          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4  rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0  dark:bg-white  text-gray-900">
+          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 text-gray-900">
             <li>
               <NavLink
                 to="/"
@@ -165,7 +165,7 @@ const Header = () => {
             <li className="relative">
               <button
                 onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
-                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600 md:hover:bg-transparent p-0"
+                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600"
               >
                 Services
                 <svg
@@ -180,77 +180,61 @@ const Header = () => {
               </button>
 
               {isServicesDropdownOpen && (
-                <ul className="absolute left-0 mt-2 w-56 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600">
+                <ul className="absolute left-0 mt-2 w-56 bg-white border rounded-md shadow-lg">
                   <li>
                     <NavLink
                       to="/soil-detection"
-                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                      onClick={() => setIsServicesDropdownOpen(false)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
                             ? "bg-green-600 text-white"
-                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                            : "text-gray-700 hover:text-green-600"
                         }`
                       }
                     >
                       Soil Detection
                     </NavLink>
                   </li>
-                  {/* <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
-                    >
-                      Farmer Implementing Crop
-                    </a>
-                  </li> */}
                   <li>
                     <NavLink
                       to="/ai-chatbot"
-                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                      onClick={() => setIsServicesDropdownOpen(false)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
                             ? "bg-green-600 text-white"
-                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                            : "text-gray-700 hover:text-green-600"
                         }`
                       }
                     >
-                     Ai-Chatbot
+                      Ai-Chatbot
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
                       to="/disease-detection"
-                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                      onClick={() => setIsServicesDropdownOpen(false)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
                             ? "bg-green-600 text-white"
-                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                            : "text-gray-700 hover:text-green-600"
                         }`
                       }
                     >
                       Disease Treatment
                     </NavLink>
                   </li>
-                  {/* <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-gray-700 hover:text-green-600 dark:text-gray-200"
-                    >
-                      Crop Health
-                    </a>
-                  </li> */}
                   <li>
                     <NavLink
                       to="/market-price"
-                      onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                      onClick={() => setIsServicesDropdownOpen(false)}
                       className={({ isActive }) =>
                         `block px-4 py-2 rounded-sm ${
                           isActive
                             ? "bg-green-600 text-white"
-                            : "text-gray-700 dark:text-gray-200 hover:text-green-600"
+                            : "text-gray-700 hover:text-green-600"
                         }`
                       }
                     >
@@ -261,20 +245,6 @@ const Header = () => {
               )}
             </li>
 
-            {/* <li>
-              <NavLink
-                to="/pricing"
-                className={({ isActive }) =>
-                  `block py-1 rounded-sm px-4 p-0 ${
-                    isActive
-                      ? "bg-green-600 text-white"
-                      : "text-gray-900  hover:text-green-600"
-                  }`
-                }
-              >
-                Pricing
-              </NavLink>
-            </li> */}
             <li>
               <NavLink
                 to="/contact"

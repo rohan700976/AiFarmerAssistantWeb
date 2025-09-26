@@ -14,6 +14,8 @@ import Diseasedetection from "./components/home/Disease-Detection";
 import Weather from './pages/Weather'
 import SoilRecommended from './services/SoilRecommended'
 import FarmerChatbot from './services/FarmerChatBot'
+import DesireCrop from './services/DesireCrop'
+import DiseaseDetails from './pages/DiseaseDetails'
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path='/weather' element={<Weather/>}/>
           <Route path='/result' element={<SoilRecommended/>}/>
           <Route path='/ai-chatbot' element={<FarmerChatbot/>}/>
+          <Route path='desire-crop' element={<DesireCrop/>}/>
+          <Route path='/disease-detail' element={<DiseaseDetails/>}/>
         </Route>
       </Routes>
     </Router>
