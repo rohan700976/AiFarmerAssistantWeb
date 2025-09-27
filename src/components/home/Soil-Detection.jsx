@@ -6,7 +6,8 @@ export default function SoilDetection() {
   const [activeTab, setActiveTab] = useState("image");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const[recoCrop, setRecoCrop] = useState([]);
+  const [recoCrop, setRecoCrop] = useState([]);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     ph: "",
     nitrogen: "",
@@ -17,49 +18,58 @@ export default function SoilDetection() {
     rain: "",
   });
   const [result, setResult] = useState("");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleSoilDetection = async () => {
-  try {
-    const response = await axios.post(`http://localhost:8000/ai/soil/crop/recommendation`, {
-      N: formData.nitrogen,
-      P: formData.phosphorus,
-      K: formData.potassium,
-      temp: formData.temp,
-      hum: formData.hum,
-      ph: formData.ph,
-      rain: formData.rain,
-    });
-
-    if (response.status === 200) {
-      // console.log("Raw:", response.data.response);
-      // console.log("Type before parsing:", Object.prototype.toString.call(response.data.response));
-
-      // ✅ Convert string to array
-      let reco = response.data.response;
-      if (typeof reco === "string") {
-        try {
-          reco = JSON.parse(reco);
-        } catch (e) {
-          console.error("Invalid JSON format from backend:", reco);
-        }
+  // Validation Function
+  const validateForm = () => {
+    let newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) {
+        newErrors[key] = `${key.toUpperCase()} is required`;
       }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-      // console.log("Type after parsing:", Object.prototype.toString.call(reco)); // should be [object Array]
-      // console.log("Parsed array:", reco);
+  const handleSoilDetection = async () => {
+    if (!validateForm()) return; // Stop if validation fails
 
-      setRecoCrop(reco);
-      // console.log(recoCrop[3]);
-      navigate("/result", { state: { recoCrop: reco, formData } });
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/ai/soil/crop/recommendation`,
+        {
+          N: formData.nitrogen,
+          P: formData.phosphorus,
+          K: formData.potassium,
+          temp: formData.temp,
+          hum: formData.hum,
+          ph: formData.ph,
+          rain: formData.rain,
+        }
+      );
+
+      if (response.status === 200) {
+        let reco = response.data.response;
+        if (typeof reco === "string") {
+          try {
+            reco = JSON.parse(reco);
+          } catch (e) {
+            console.error("Invalid JSON format from backend:", reco);
+          }
+        }
+        setRecoCrop(reco);
+        navigate("/result", { state: { recoCrop: reco, formData } });
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
 
-const handleDetect = (recoCrop) => {
-  navigate(`/result/${recoCrop}`, { state: { formData } });
-};
+  const handleDetect = (recoCrop) => {
+    navigate(`/result`, { state: { formData } });
+  };
+
   // Handle File Upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -75,35 +85,12 @@ const handleDetect = (recoCrop) => {
   // Handle Form Input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" }); // Clear error on typing
   };
 
-  // Fake Detection (Replace with API/ML model)
-  // const handleDetect = (type) => {
-  //   if (type === "image" && selectedFile) {
-  //     setResult("📷 Soil detected from Image: Black Soil 🌱 (Best for Cotton & Oilseeds)");
-  //   } else if (type === "form") {
-  //     const { ph, nitrogen, phosphorus, potassium, moisture } = formData;
-  //     if (!ph || !nitrogen || !phosphorus || !potassium || !moisture) {
-  //       alert("⚠️ Please fill all form fields!");
-  //       return;
-  //     }
-  //     setResult(
-  //       `🧪 Soil detected from Data Input:
-  //       - pH: ${ph}
-  //       - Nitrogen: ${nitrogen}
-  //       - Phosphorus: ${phosphorus}
-  //       - Potassium: ${potassium}
-  //       - Moisture: ${moisture}
-  //       👉 Likely Soil Type: Alluvial Soil (Best for Wheat & Rice)`
-  //     );
-  //   } else {
-  //     alert("Please provide input first!");
-  //   }
-  // };
-
   return (
-    <div className="min-h-screen bg-green-50  flex flex-col items-center pt-30 px-4 ">
-      <h1 className="text-3xl font-bold text-green-700  mb-8">
+    <div className="min-h-screen bg-green-50 flex flex-col items-center pt-30 px-4 ">
+      <h1 className="text-3xl font-bold text-green-700 mb-8">
         Soil Detection
       </h1>
 
@@ -113,8 +100,8 @@ const handleDetect = (recoCrop) => {
           onClick={() => setActiveTab("image")}
           className={`px-6 py-3 text-sm font-medium transition ${
             activeTab === "image"
-              ?   "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              ? "bg-green-600 text-white"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
           AI Image Analysis
@@ -123,8 +110,8 @@ const handleDetect = (recoCrop) => {
           onClick={() => setActiveTab("form")}
           className={`px-6 py-3 text-sm font-medium transition ${
             activeTab === "form"
-              ?   "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              ? "bg-green-600 text-white"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}
         >
           Enter Soil Data
@@ -194,62 +181,29 @@ const handleDetect = (recoCrop) => {
           <>
             {/* FORM INPUT SECTION */}
             <form className="space-y-4 text-left">
-              <input
-                type="number"
-                name="ph"
-                value={formData.ph}
-                onChange={handleChange}
-                placeholder="pH Value"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="nitrogen"
-                value={formData.nitrogen}
-                onChange={handleChange}
-                placeholder="Nitrogen Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="phosphorus"
-                value={formData.phosphorus}
-                onChange={handleChange}
-                placeholder="Phosphorus Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="potassium"
-                value={formData.potassium}
-                onChange={handleChange}
-                placeholder="Potassium Level"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="temp"
-                value={formData.temp}
-                onChange={handleChange}
-                placeholder="Temperature (°C)"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="hum"
-                value={formData.hum}
-                onChange={handleChange}
-                placeholder="Humidity (%)"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
-              <input
-                type="number"
-                name="rain"
-                value={formData.rain}
-                onChange={handleChange}
-                placeholder="Rainfall (mm)"
-                className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-              />
+              {[
+                "ph",
+                "nitrogen",
+                "phosphorus",
+                "potassium",
+                "temp",
+                "hum",
+                "rain",
+              ].map((field) => (
+                <div key={field}>
+                  <input
+                    type="number"
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={field.toUpperCase()}
+                    className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
+                  />
+                  {errors[field] && (
+                    <p className="text-red-600 text-sm mt-1">{errors[field]}</p>
+                  )}
+                </div>
+              ))}
             </form>
 
             <button

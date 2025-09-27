@@ -81,7 +81,7 @@ export default function FarmerChatbot() {
   };
 
   return (
-    <div className="flex flex-col h-[600px] w-[600px] mx-auto bg-white border shadow-lg rounded-xl overflow-hidden mt-10 mb-5">
+    <div className="flex flex-col h-[600px] w-[1000px] mx-auto bg-white border shadow-lg rounded-xl overflow-hidden mt-20 mb-5">
       {/* Chat Header */}
       <div className="bg-green-600 text-white text-lg font-semibold p-3">
         AI Farmer Chatbot

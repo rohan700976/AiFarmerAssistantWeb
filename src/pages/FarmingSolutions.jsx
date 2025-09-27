@@ -5,22 +5,26 @@ import ServiceCard from "../components/cards/ServiceCard";
 const serviceData = [
   {
     name: "Crop Advisory with AI",
-    description: "Get AI-powered guidance for crop planning, cultivation, and yield optimization.",
+    description:
+      "Get AI-powered guidance for crop planning, cultivation, and yield optimization.",
     image: "https://unpkg.com/lucide-static/icons/sprout.svg",
   },
   {
     name: "Weather Forecasting",
-    description: "Receive hyperlocal weather updates to make timely farming decisions.",
+    description:
+      "Receive hyperlocal weather updates to make timely farming decisions.",
     image: "https://unpkg.com/lucide-static/icons/cloud-snow.svg",
   },
   {
     name: "Soil Detection",
-    description: "Analyze your soil for pH, nutrients, and moisture for better crop health.",
+    description:
+      "Analyze your soil for pH, nutrients, and moisture for better crop health.",
     image: "https://unpkg.com/lucide-static/icons/test-tube.svg",
   },
   {
     name: "Disease Detection",
-    description: "Detect crop diseases and get recommendations for organic and chemical treatments.",
+    description:
+      "Detect crop diseases and get recommendations for organic and chemical treatments.",
     image: "https://unpkg.com/lucide-static/icons/stethoscope.svg",
   },
   {
@@ -30,17 +34,18 @@ const serviceData = [
   },
   {
     name: "Chat with AI",
-    description: "Interact with an AI assistant to get answers and guidance for farming queries.",
+    description:
+      "Interact with an AI assistant to get answers and guidance for farming queries.",
     image: "https://unpkg.com/lucide-static/icons/message-square.svg",
   },
 ];
 
 function FarmingSolutions() {
   return (
-    <div className="max-w-full ">
+    <div className="max-w-full">
       {/* Header Section */}
-      <div className="text-center bg-gray-50">
-        <div className="flex items-center justify-center space-x-2 mb-4 ">
+      <div className="text-center bg-gray-50 px-4 sm:px-6 lg:px-0 py-8">
+        <div className="flex items-center justify-center space-x-2 mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="lucide lucide-sparkles h-6 w-6 text-green-600 animate-pulse"
@@ -80,16 +85,14 @@ function FarmingSolutions() {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
           Complete Farming Solutions
         </h2>
-        <p className="text-xl text-green-700 max-w-3xl mx-auto ">
+        <p className="text-lg sm:text-xl text-green-700 max-w-xl sm:max-w-3xl mx-auto">
           From seed to harvest, DigiShivar AI provides comprehensive support for
           every aspect of modern agriculture
         </p>
       </div>
 
       {/* Services Grid with Motion */}
-      {/* <div className=" bg-amber-400  "> */}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-30 py-10 mt-0 bg-gray-50" >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:px-22 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pl-11 sm:px-6  py-10 bg-gray-50">
         {serviceData.map((item, idx) => (
           <motion.div
             key={idx}
@@ -99,7 +102,6 @@ function FarmingSolutions() {
             viewport={{ once: true }}
             whileHover={{ scale: 1.05, y: -12, rotate: 1 }}
             whileTap={{ scale: 1.05, y: -12, rotate: 1 }}
-             className=""
           >
             <ServiceCard
               name={item.name}
@@ -109,14 +111,6 @@ function FarmingSolutions() {
           </motion.div>
         ))}
       </div>
-      {/* </div> */}
-
-      {/* CTA Section */}
-      {/* <div className="mt-20 relative">
-        <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-blue-600 rounded-3xl p-8 text-center text-white relative overflow-hidden">
-          
-        </div>
-      </div> */}
     </div>
   );
 }
