@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import logo from '../../assets/logo/logo.jpg';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,21 +32,17 @@ const Header = () => {
           href="/"
           className="flex items-center space-x-3 pl-2 sm:pl-6 lg:pl-8 rtl:space-x-reverse"
         >
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Logo"
-          />
-          <span className="self-center text-2xl sm:text-3xl lg:text-4xl font-semibold whitespace-nowrap text-green-400">
-            CropApp
+          <img src={logo} className="h-14 w-16" alt="Logo" />
+          <span className="self-center text-2xl sm:text-3xl lg:text-4xl font-bold whitespace-nowrap text-green-400">
+            KisanMitra
           </span>
         </a>
 
-        {/* Right side - Login/Signup */}
-        <div className="flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse relative md:pr-5">
+        {/* Right side (desktop only) */}
+        <div className="hidden md:flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse relative md:pr-5">
           <button
             onClick={() => navigate("auth/login")}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
           >
             Login
           </button>
@@ -55,33 +52,33 @@ const Header = () => {
           >
             Signup
           </button>
-
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button>
         </div>
 
-        {/* Main menu */}
+        {/* Mobile menu toggle */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          type="button"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+        >
+          <span className="sr-only">Open main menu</span>
+          <svg
+            className="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 17 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M1 1h15M1 7h15M1 13h15"
+            />
+          </svg>
+        </button>
+
+        {/* Main menu (mobile + desktop nav links) */}
         <div
           className={`text-lg w-full md:flex md:w-auto ${
             isMobileMenuOpen ? "" : "hidden"
@@ -204,6 +201,7 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
+                    
                     <NavLink
                       to="/market-price"
                       onClick={() => setIsServicesDropdownOpen(false)}
@@ -234,6 +232,36 @@ const Header = () => {
                 }
               >
                 Contact
+              </NavLink>
+            </li>
+
+            {/* Mobile-only Login/Signup */}
+            <li className="md:hidden">
+              <NavLink
+                to="/auth/login"
+                className={({ isActive }) =>
+                  `block py-1 px-4 rounded-sm ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900 hover:text-green-600"
+                  }`
+                }
+              >
+                Login
+              </NavLink>
+            </li>
+            <li className="md:hidden">
+              <NavLink
+                to="/auth/signup"
+                className={({ isActive }) =>
+                  `block py-1 px-4 rounded-sm ${
+                    isActive
+                      ? "bg-green-600 text-white"
+                      : "text-gray-900 hover:text-green-600"
+                  }`
+                }
+              >
+                Signup
               </NavLink>
             </li>
           </ul>

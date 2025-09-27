@@ -8,23 +8,14 @@ function Testimonials() {
           {/* Section heading */}
           <div className="text-center max-w-2xl mx-auto">
             <p className="text-lg font-medium text-gray-600 font-pj">
-              2,157 farmers shared their experiences
+              Lot of farmers shared their experiences
             </p>
             <h2 className="mt-4 text-3xl font-bold text-green-800 sm:text-3xl xl:text-5xl font-serif">
               How digital tools changed farmers’ lives
             </h2>
           </div>
 
-          {/* CTA link */}
-          <div className="mt-8 text-center md:mt-16 md:order-3">
-            <a
-              href="#"
-              className="pb-2 text-base font-bold leading-7 text-gray-900 transition-all duration-200 border-b-2 border-gray-900 hover:border-gray-600 font-pj focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2 hover:text-gray-600"
-            >
-              Read all farmer reviews
-            </a>
-          </div>
-
+      
           {/* Testimonials grid */}
           <div className="relative mt-10 md:mt-24 md:order-2 w-full ml-10">
             {/* Gradient background */}
