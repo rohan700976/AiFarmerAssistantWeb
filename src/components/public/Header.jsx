@@ -1,110 +1,126 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const authDropdownRef = useRef(null);
+  const servicesDropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+
+  // Close dropdowns + mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        authDropdownRef.current &&
+        !authDropdownRef.current.contains(event.target)
+      ) {
+        setIsAuthDropdownOpen(false);
+      }
+      if (
+        servicesDropdownRef.current &&
+        !servicesDropdownRef.current.contains(event.target)
+      ) {
+        setIsServicesDropdownOpen(false);
+      }
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        !event.target.closest("#mobile-menu-btn")
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white border-gray-200 shadow-md h-18 flex items-center z-50">
+    <nav className="fixed top-0 left-0 w-full bg-white border-gray-200 shadow-md flex items-center z-50">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-3">
         {/* Logo */}
-        <a href="/" className="flex items-center space-x-3 pl-8 rtl:space-x-reverse">
+        <a
+          href="/"
+          className="flex items-center space-x-3 pl-2 sm:pl-6 lg:pl-8 rtl:space-x-reverse"
+        >
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="h-8"
             alt="Logo"
           />
-          <span className="self-center text-4xl font-semibold whitespace-nowrap text-green-400">
+          <span className="self-center text-2xl sm:text-3xl lg:text-4xl font-semibold whitespace-nowrap text-green-400">
             CropApp
           </span>
         </a>
 
         {/* Right side */}
-        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {/* Profile dropdown button */}
-          <button
-            type="button"
-            onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-            className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-          >
-            <span className="sr-only">Open user menu</span>
-            <img
-              className="w-12 h-12 rounded-full"
-              src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-              alt="user"
-            />
-          </button>
+        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 relative">
+          {/* Profile dropdown */}
+          <div className="relative" ref={authDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
+              className="flex text-sm bg-gray-200 rounded-full focus:ring-4 focus:ring-gray-300"
+            >
+              <img
+                className="w-10 h-10 rounded-full"
+                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                alt="profile"
+              />
+            </button>
 
-          {/* User Dropdown */}
-          {isUserDropdownOpen && (
-            <div className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600 absolute right-4 top-16">
-              <div className="px-4 py-3">
-                <span className="block text-sm text-gray-900 dark:text-white">
-                  Bonnie Green
-                </span>
-                <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  name@flowbite.com
-                </span>
+            {isAuthDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-md">
+                <ul className="py-2 text-gray-700">
+                  <li>
+                    <button
+                      onClick={() => {
+                        navigate("/login");
+                        setIsAuthDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 hover:bg-green-600 hover:text-white"
+                    >
+                      Login
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        navigate("/signup");
+                        setIsAuthDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 hover:bg-green-600 hover:text-white"
+                    >
+                      Signup
+                    </button>
+                  </li>
+                </ul>
               </div>
-              <ul className="py-2">
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Dashboard
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Earnings
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Sign out
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
+            )}
+          </div>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile menu button */}
           <button
+            id="mobile-menu-btn"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 ml-2"
           >
-            <span className="sr-only">Open main menu</span>
             <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
               fill="none"
-              viewBox="0 0 17 14"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
               <path
-                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
+                d="M4 6h16M4 12h16M4 18h16"
               />
             </svg>
           </button>
@@ -112,31 +128,32 @@ const Header = () => {
 
         {/* Main menu */}
         <div
-          className={`text-xl w-full md:flex md:w-auto ml-100 ${
-            isMobileMenuOpen ? "" : "hidden"
+          ref={mobileMenuRef}
+          className={`text-lg w-full md:flex md:w-auto ${
+            isMobileMenuOpen ? "block" : "hidden"
           }`}
-          id="navbar-user"
         >
-          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 text-gray-900">
+          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:bg-transparent md:space-x-6 lg:space-x-8 md:flex-row md:mt-0">
             <li>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `block py-1 rounded-sm px-4 p-0 ${
+                  `block py-1 px-4 rounded ${
                     isActive
                       ? "bg-green-600 text-white"
-                      : "text-gray-900  hover:text-green-600"
+                      : "text-gray-900 hover:text-green-600"
                   }`
                 }
               >
                 Home
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/ai-chatbot"
                 className={({ isActive }) =>
-                  `block py-1 rounded-sm px-4 p-0 ${
+                  `block py-1 px-4 rounded ${
                     isActive
                       ? "bg-green-600 text-white"
                       : "text-gray-900 hover:text-green-600"
@@ -146,14 +163,15 @@ const Header = () => {
                 Ai-Chatbot
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/weather"
                 className={({ isActive }) =>
-                  `block py-1 rounded-sm px-4 p-0 ${
+                  `block py-1 px-4 rounded ${
                     isActive
                       ? "bg-green-600 text-white"
-                      : "text-gray-900  hover:text-green-600"
+                      : "text-gray-900 hover:text-green-600"
                   }`
                 }
               >
@@ -162,10 +180,12 @@ const Header = () => {
             </li>
 
             {/* Services dropdown */}
-            <li className="relative">
+            <li className="relative" ref={servicesDropdownRef}>
               <button
-                onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
-                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600"
+                onClick={() =>
+                  setIsServicesDropdownOpen(!isServicesDropdownOpen)
+                }
+                className="flex items-center py-1 px-4 text-gray-900 rounded hover:text-green-600"
               >
                 Services
                 <svg
@@ -175,7 +195,7 @@ const Header = () => {
                   strokeWidth="2"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <path d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
@@ -185,13 +205,7 @@ const Header = () => {
                     <NavLink
                       to="/soil-detection"
                       onClick={() => setIsServicesDropdownOpen(false)}
-                      className={({ isActive }) =>
-                        `block px-4 py-2 rounded-sm ${
-                          isActive
-                            ? "bg-green-600 text-white"
-                            : "text-gray-700 hover:text-green-600"
-                        }`
-                      }
+                      className="block px-4 py-2 hover:bg-green-600 hover:text-white"
                     >
                       Soil Detection
                     </NavLink>
@@ -200,13 +214,7 @@ const Header = () => {
                     <NavLink
                       to="/ai-chatbot"
                       onClick={() => setIsServicesDropdownOpen(false)}
-                      className={({ isActive }) =>
-                        `block px-4 py-2 rounded-sm ${
-                          isActive
-                            ? "bg-green-600 text-white"
-                            : "text-gray-700 hover:text-green-600"
-                        }`
-                      }
+                      className="block px-4 py-2 hover:bg-green-600 hover:text-white"
                     >
                       Ai-Chatbot
                     </NavLink>
@@ -215,13 +223,7 @@ const Header = () => {
                     <NavLink
                       to="/disease-detection"
                       onClick={() => setIsServicesDropdownOpen(false)}
-                      className={({ isActive }) =>
-                        `block px-4 py-2 rounded-sm ${
-                          isActive
-                            ? "bg-green-600 text-white"
-                            : "text-gray-700 hover:text-green-600"
-                        }`
-                      }
+                      className="block px-4 py-2 hover:bg-green-600 hover:text-white"
                     >
                       Disease Treatment
                     </NavLink>
@@ -230,13 +232,7 @@ const Header = () => {
                     <NavLink
                       to="/market-price"
                       onClick={() => setIsServicesDropdownOpen(false)}
-                      className={({ isActive }) =>
-                        `block px-4 py-2 rounded-sm ${
-                          isActive
-                            ? "bg-green-600 text-white"
-                            : "text-gray-700 hover:text-green-600"
-                        }`
-                      }
+                      className="block px-4 py-2 hover:bg-green-600 hover:text-white"
                     >
                       Market Price
                     </NavLink>
@@ -249,7 +245,7 @@ const Header = () => {
               <NavLink
                 to="/contact"
                 className={({ isActive }) =>
-                  `block py-1 rounded-sm px-4 p-0 ${
+                  `block py-1 px-4 rounded ${
                     isActive
                       ? "bg-green-600 text-white"
                       : "text-gray-900 hover:text-green-600"

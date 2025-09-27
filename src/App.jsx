@@ -16,6 +16,9 @@ import SoilRecommended from './services/SoilRecommended'
 import FarmerChatbot from './services/FarmerChatBot'
 import DesireCrop from './services/DesireCrop'
 import DiseaseDetails from './pages/DiseaseDetails'
+import Login from './Auth/Login'
+import SignUp from './Auth/SignUp'
+import MicButton from './pages/MicButton'
 
 function App() {
   return (
@@ -38,8 +41,11 @@ function App() {
           <Route path='/ai-chatbot' element={<FarmerChatbot/>}/>
           <Route path='desire-crop' element={<DesireCrop/>}/>
           <Route path='/disease-detail' element={<DiseaseDetails/>}/>
+          <Route path='/auth/login' element={<Login/>}/>
+          <Route path='/auth/signup' element={<SignUp/>}/>
         </Route>
       </Routes>
+      <MicButton/>
     </Router>
   )
 }

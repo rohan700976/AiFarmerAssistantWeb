@@ -7,6 +7,8 @@ import Testimonials from '../components/home/Testamonials'
 import Choose from '../components/home/Choose'
 import FarmingSolutions from './FarmingSolutions'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import Yojana from '../components/home/Yojana'
+import FarmerGrowthChart from '../components/home/FarmerGrowthChart'
 
 
 
@@ -21,6 +23,8 @@ function Home() {
       {/* <About/> */}
       <Choose/>
       {/* <HowItWorks/> */}
+      <Yojana/>
+      <FarmerGrowthChart/>
       <Contact/>
       
       <Testimonials/>

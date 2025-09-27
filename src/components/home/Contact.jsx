@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -17,7 +16,6 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    // Add your form submission logic here (e.g., API call or email service)
   };
 
   const handleReset = () => {
@@ -25,22 +23,23 @@ const Contact = () => {
   };
 
   return (
-    
-    <div className="min-h-screen bg-gray-50 py-6  sm:py-12 flex flex-1">
-      <div className="relative py-3 sm:max-w-xl ml-30">
-        <div className="absolute inset-0 border h-155  bg-gradient-to-r from-green-700 to-green-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+    <div className="min-h-screen  bg-gray-50 py-6 sm:py-12 flex flex-col lg:flex-row items-center lg:items-start justify-center">
 
-        <div className="relative px-4 py-10 bg-gray-100 shadow-lg sm:rounded-3xl sm:p-20 text-white">
-          <div className="text-center pb-8">
-            <h1 className="text-4xl font-bold font-sharif text-green-900 pb-5">Contact Us!</h1>
+      {/* Form Section */}
+      <div className="relative w-full ml-10 lg:w-[37%] lg:pb-10 px-4 sm:px-6 lg:px-0 mb-0 lg:ml-20 lg:mb-0">
+        <div className="absolute lg:h-full inset-0 h-full bg-gradient-to-r from-green-700 to-green-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+
+        <div className="relative bg-gray-100 shadow-lg sm:rounded-3xl sm:p-20 p-6 text-green-900">
+          <div className="text-center pb-6">
+            <h1 className="text-4xl font-bold font-sharif text-green-900 pb-3">Contact Us!</h1>
             <p className="text-green-700 text-lg">
               Fill up the form below to send us a message.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
-              className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Name"
               name="name"
@@ -49,7 +48,7 @@ const Contact = () => {
             />
 
             <input
-              className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               type="email"
               placeholder="Email"
               name="email"
@@ -58,7 +57,7 @@ const Contact = () => {
             />
 
             <input
-              className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Subject"
               name="subject"
@@ -67,18 +66,18 @@ const Contact = () => {
             />
 
             <textarea
-              className="shadow mb-4 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
               placeholder="Type your message here..."
               name="message"
               value={formData.message}
               onChange={handleChange}
-              style={{ height: "121px" }}
+              style={{ minHeight: "120px" }}
             ></textarea>
 
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row gap-3 justify-between">
               <button
                 type="submit"
-                className="shadow bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="shadow bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
               >
                 Send ➤
               </button>
@@ -86,31 +85,23 @@ const Contact = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="shadow bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="shadow bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
               >
                 Reset
               </button>
-
-
             </div>
-
           </form>
-          <div>
-      </div>
-      
         </div>
       </div>
-      
-      <div className="h-150 w-full pl-40 mb-10">
 
-
-       <DotLottieReact
-      src="/Welcome.lottie"
-      loop
-      autoplay 
-      
-      
-    />
+      {/* Animation Section */}
+      <div className="w-full ml-10 lg:w-[50%] lg:h-130 lg:pl-10 flex justify-center lg:m-auto px-4 sm:px-6">
+        <DotLottieReact
+          src="/Welcome.lottie"
+          loop
+          autoplay
+          className="w-full sm:w-96 lg:w-auto"
+        />
       </div>
     </div>
   );
