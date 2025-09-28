@@ -10,7 +10,9 @@ function SoilRecommended() {
 
   const [defination, setDefination] = useState("");
   const [soilData, setSoilData] = useState([]);
+  const [fertilizerName, setFertilizerName] = useState("");
   const [fertilizerData, setFertilizerData] = useState([]);
+
   const [desiredCrop, setDesiredCrop] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState("right");
@@ -47,17 +49,72 @@ function SoilRecommended() {
       const fert_param = await axios.get(
         `${import.meta.env.VITE_URL}/ai/crop/fertilizer/${cropName}`
       );
-      if (fert_param.status === 200) setFertilizerData(fert_param.data.response);
+
+      if (fert_param.status === 200) {
+        let parsedFert = [];
+        let fertName = "";
+
+        if (typeof fert_param.data.response === "string") {
+          const lines = fert_param.data.response.trim().split("\n");
+
+          // First non-empty line before table is the fertilizer name
+          const tableStartIndex = lines.findIndex((line) => line.trim().startsWith("|"));
+          fertName = lines.slice(0, tableStartIndex).join(" ").trim(); // "Urea" or "DAP" etc.
+
+          const tableMarkdown = lines.slice(tableStartIndex).join("\n");
+          parsedFert = parseMarkdownTable(tableMarkdown);
+        } else if (Array.isArray(fert_param.data.response)) {
+          parsedFert = fert_param.data.response;
+        }
+
+        setFertilizerName(fertName);
+        setFertilizerData(parsedFert);
+      }
 
       // Crop life cycle (optional API)
       const cycle_param = await axios.get(
-        `${import.meta.env.VITE_URL}/ai/crop/lifecycle/${cropName}`
+        `${import.meta.env.VITE_URL}/ai/crop/grow/cycle/${cropName}`
       );
-      if (cycle_param.status === 200) setLifeCycle(cycle_param.data.response);
+      if (cycle_param.status === 200) {
+        // console.log("Raw:", cycle_param.data.response);
+        // console.log("Type:", typeof cycle_param.data.response);
+
+        let parsedCycle = [];
+
+        if (typeof cycle_param.data.response === "string") {
+          parsedCycle = parseMarkdownTable(cycle_param.data.response);
+        } else if (Array.isArray(cycle_param.data.response)) {
+          parsedCycle = cycle_param.data.response;
+        }
+
+        setLifeCycle(parsedCycle);
+      }
+
     } catch (error) {
       console.error(error);
     }
   };
+
+  const handlePredict = async () => {
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_URL}/ai/crop/yield/${currentCrop}`,
+        {
+          params: {
+            soil: yieldInputs.soil,
+            weather: yieldInputs.weather,
+            variety: yieldInputs.cropVariety,
+          },
+        }
+      );
+
+      setResultPrediction(`🌾 Predicted Yield: ${data.response} Quintals/ha`);
+    } catch (err) {
+      console.error(err);
+      setResultPrediction("⚠️ Unable to fetch yield prediction.");
+    }
+  };
+
 
   function parseMarkdownTable(markdown) {
     const lines = markdown.trim().split("\n");
@@ -161,21 +218,21 @@ function SoilRecommended() {
 
           {/* Recommended Crop Card */}
           {/* Recommended Crop Card */}
-<div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-  <img
-    src={wheatImage}
-    alt={currentCrop}
-    className="w-full md:w-1/2 h-64 object-cover"
-  />
-  <div className="p-6 md:w-1/2 flex flex-col justify-between">
-    <h2 className="text-3xl font-bold text-gray-800 mb-4">{currentCrop}</h2>
-    <span className="inline-block bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded-full mb-4">
-      Recommended Crop {currentIndex + 1}/{recoCrop.length}
-    </span>
-    {/* Crop Description */}
-    <p className="text-gray-700 mb-2">{defination}</p>
-  </div>
-</div>
+          <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+            <img
+              src={wheatImage}
+              alt={currentCrop}
+              className="w-full md:w-1/2 h-64 object-cover"
+            />
+            <div className="p-6 md:w-1/2 flex flex-col justify-between">
+              <h2 className="text-3xl font-bold text-gray-800 mb-4">{currentCrop}</h2>
+              <span className="inline-block bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded-full mb-4">
+                Recommended Crop {currentIndex + 1}/{recoCrop.length}
+              </span>
+              {/* Crop Description */}
+              <p className="text-gray-700 mb-2">{defination}</p>
+            </div>
+          </div>
 
 
           {/* Soil Table */}
@@ -204,27 +261,35 @@ function SoilRecommended() {
           </div>
 
           {/* Fertilizer Table */}
-          <div className="bg-white p-6 rounded-2xl shadow border border-gray-200 overflow-x-auto">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Fertilizer Recommendation</h3>
+          <div className="bg-white p-6 rounded-2xl shadow border border-gray-200 overflow-x-auto mt-8">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Fertilizer Recommendation
+            </h3>
+
+            {fertilizerName && (
+              <h4 className="text-xl font-semibold text-green-600 mb-2">{fertilizerName}</h4>
+            )}
+
             <table className="min-w-full text-left border-collapse">
               <thead>
                 <tr>
-                  <th className="border-b border-gray-300 p-2">Fertilizer</th>
-                  <th className="border-b border-gray-300 p-2">Quantity</th>
-                  <th className="border-b border-gray-300 p-2">Timing</th>
+                  <th className="border-b border-gray-300 p-2">Date</th>
+                  <th className="border-b border-gray-300 p-2">Time</th>
+                  <th className="border-b border-gray-300 p-2">Amount</th>
                 </tr>
               </thead>
               <tbody>
                 {fertilizerData.map((row, idx) => (
                   <tr key={idx}>
-                    <td className="border-b border-gray-300 p-2">{row.fertilizer}</td>
-                    <td className="border-b border-gray-300 p-2">{row.quantity}</td>
-                    <td className="border-b border-gray-300 p-2">{row.timing}</td>
+                    <td className="border-b border-gray-300 p-2">{row["Date"]}</td>
+                    <td className="border-b border-gray-300 p-2">{row["Time"]}</td>
+                    <td className="border-b border-gray-300 p-2">{row["Amount"]}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
 
           {/* Yield Prediction Section */}
           <div className="bg-white p-6 rounded-2xl shadow border border-gray-200 mt-8">
@@ -255,15 +320,12 @@ function SoilRecommended() {
               </div>
 
               <button
-                onClick={() =>
-                  setResultPrediction(
-                    `🌾 Predicted Yield for ${yieldInputs.cropVariety || "Default Crop"}: 25 Quintals/ha`
-                  )
-                }
+                onClick={handlePredict}
                 className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
               >
                 Predict
               </button>
+
 
               {resultPrediction && (
                 <div className="mt-4 bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow">
@@ -275,31 +337,32 @@ function SoilRecommended() {
 
           {/* Crop Life Cycle Section */}
           <div className="bg-white p-6 rounded-2xl shadow border border-gray-200 mt-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Crop Life Cycle (Random Crop)</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Crop Life Cycle</h3>
             <table className="min-w-full text-left border-collapse">
               <thead>
                 <tr>
-                  <th className="border-b border-gray-300 p-2">Month</th>
-                  <th className="border-b border-gray-300 p-2">Stage</th>
+                  {lifeCycle.length > 0 &&
+                    Object.keys(lifeCycle[0]).map((header, idx) => (
+                      <th key={idx} className="border-b border-gray-300 p-2">
+                        {header}
+                      </th>
+                    ))}
                 </tr>
               </thead>
               <tbody>
-                {[
-                  { month: "Jan", stage: "Sowing" },
-                  { month: "Feb", stage: "Germination" },
-                  { month: "Mar", stage: "Vegetative Growth" },
-                  { month: "Apr", stage: "Flowering" },
-                  { month: "May", stage: "Fruiting" },
-                  { month: "Jun", stage: "Harvesting" },
-                ].map((stage, idx) => (
+                {lifeCycle.map((row, idx) => (
                   <tr key={idx}>
-                    <td className="border-b border-gray-300 p-2">{stage.month}</td>
-                    <td className="border-b border-gray-300 p-2">{stage.stage}</td>
+                    {Object.values(row).map((val, i) => (
+                      <td key={i} className="border-b border-gray-300 p-2">
+                        {val}
+                      </td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
         </motion.div>
       </AnimatePresence>
     </div>
