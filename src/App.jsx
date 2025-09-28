@@ -7,7 +7,7 @@ import About from './components/home/About'
 import Hero from './components/home/Hero'
 import HowItWorks from './components/home/HowItWorks'
 import Testimonials from './components/home/Testamonials'
-import Choose from './components/home/Choose'   // ✅ Fixed uppercase
+import Choose from './components/home/Choose'   
 import SoilDetection from "./components/home/Soil-Detection";
 import MarketPrice from "./components/home/MarketPrice";
 import Diseasedetection from "./components/home/Disease-Detection";
@@ -19,6 +19,7 @@ import DiseaseDetails from './pages/DiseaseDetails'
 import Login from './Auth/Login'
 import SignUp from './Auth/SignUp'
 import MicButton from './pages/MicButton'
+import ChatbotWrapper from './wrapper/ChatbotWrapper'
 
 function App() {
   return (
@@ -45,7 +46,8 @@ function App() {
           <Route path='/auth/signup' element={<SignUp/>}/>
         </Route>
       </Routes>
-      <MicButton/>
+      <ChatbotWrapper />
+      {/* <MicButton/> */}
     </Router>
   )
 }
