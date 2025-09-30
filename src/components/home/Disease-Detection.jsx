@@ -19,23 +19,26 @@ export default function DiseaseDetection() {
     reader.onloadend = () => setPreview(reader.result);
     reader.readAsDataURL(file);
 
-    setCameraActive(false); // Stop camera if file is uploaded
     stopCamera();
   };
 
   // Start Camera
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        await videoRef.current.play();
         setCameraActive(true);
         setPreview(null);
         setSelectedFile(null);
       }
     } catch (err) {
       console.error("Camera error:", err);
-      alert("Camera not accessible.");
+      alert("Camera not accessible. Check HTTPS & permissions.");
     }
   };
 
@@ -50,15 +53,28 @@ export default function DiseaseDetection() {
   // Capture Photo from Camera
   const handleCapture = () => {
     if (!videoRef.current) return;
+
     const width = videoRef.current.videoWidth;
     const height = videoRef.current.videoHeight;
     canvasRef.current.width = width;
     canvasRef.current.height = height;
+
     const ctx = canvasRef.current.getContext("2d");
     ctx.drawImage(videoRef.current, 0, 0, width, height);
-    const dataUrl = canvasRef.current.toDataURL("image/png");
-    setPreview(dataUrl);
-    setSelectedFile(dataUrl); // Can be sent to backend
+
+    canvasRef.current.toBlob((blob) => {
+      if (!blob) return;
+      const file = new File([blob], "captured_image.png", { type: "image/png" });
+
+      // Save captured file in state
+      setSelectedFile(file);
+
+      // Generate preview
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result);
+      reader.readAsDataURL(file);
+    }, "image/png");
+
     stopCamera();
   };
 
@@ -72,17 +88,25 @@ export default function DiseaseDetection() {
   };
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-green-100 to-green-50 p-4">
-      <div className="max-w-4xl h-[400px] mx-auto bg-white rounded-2xl shadow-xl p-6 mt-40">
+    <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 p-4">
+      <div className="max-w-4xl h-[550px] mx-auto bg-white rounded-2xl shadow-xl p-6 mt-20">
         <h1 className="text-3xl font-bold text-green-700 mb-8 text-center mt-10">
           🌱 Plant Disease Detection
         </h1>
 
-        {/* Options */}
         <div className="flex flex-col md:flex-row gap-6 mb-6">
           {/* Image Upload */}
-          <div className="flex-1 p-4 border rounded-xl shadow-sm bg-green-50">
+          <div className="flex-1 p-4 border rounded-xl shadow-sm bg-green-50 flex flex-col items-center">
             <h2 className="text-lg font-semibold mb-2">Upload Image</h2>
+
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mb-2 h-48 w-auto rounded-lg object-cover shadow-md"
+              />
+            )}
+
             <input
               type="file"
               accept="image/*"
@@ -94,6 +118,7 @@ export default function DiseaseDetection() {
           {/* Camera Capture */}
           <div className="flex-1 p-4 border rounded-xl shadow-sm bg-green-50 flex flex-col items-center">
             <h2 className="text-lg font-semibold mb-2">Live Camera</h2>
+
             {!cameraActive && (
               <button
                 onClick={startCamera}
@@ -102,44 +127,48 @@ export default function DiseaseDetection() {
                 Start Camera
               </button>
             )}
+
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className={`w-full h-48 rounded-lg object-cover mb-2 ${cameraActive ? "block" : "hidden"}`}
+            />
+
             {cameraActive && (
-              <>
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  className="w-full h-48 rounded-lg object-cover mb-2"
+              <div className="flex gap-2 mb-2">
+                <button
+                  onClick={handleCapture}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+                >
+                  Capture
+                </button>
+                <button
+                  onClick={stopCamera}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
+                >
+                  Stop
+                </button>
+              </div>
+            )}
+
+            {/* New Input field below camera to show captured image as file */}
+            {selectedFile && (
+              <div className="w-full mt-2">
+                <label className="block text-gray-700 font-semibold mb-1">
+                  Captured Image File:
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  value={selectedFile.name}
+                  className="w-full border border-gray-300 rounded-lg p-2 bg-gray-100 cursor-not-allowed"
                 />
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleCapture}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
-                  >
-                    Capture
-                  </button>
-                  <button
-                    onClick={stopCamera}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
-                  >
-                    Stop
-                  </button>
-                </div>
-              </>
+              </div>
             )}
           </div>
         </div>
-
-        {/* Preview */}
-        {preview && (
-          <div className="mb-6 text-center">
-            <h2 className="text-lg font-semibold mb-2">Preview</h2>
-            <img
-              src={preview}
-              alt="Preview"
-              className="mx-auto h-64 w-auto rounded-lg shadow-md object-cover"
-            />
-          </div>
-        )}
 
         <button
           onClick={handleDetect}
@@ -148,7 +177,6 @@ export default function DiseaseDetection() {
           Detect Disease
         </button>
 
-        {/* Hidden Canvas */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
     </div>

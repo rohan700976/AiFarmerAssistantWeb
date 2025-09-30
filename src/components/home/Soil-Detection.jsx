@@ -6,7 +6,6 @@ export default function SoilDetection() {
   const [activeTab, setActiveTab] = useState("image");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [recoCrop, setRecoCrop] = useState([]);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     ph: "",
@@ -18,57 +17,8 @@ export default function SoilDetection() {
     rain: "",
   });
   const [result, setResult] = useState("");
+  const [iotClicked, setIotClicked] = useState(false); // ✅ track IoT button state
   const navigate = useNavigate();
-
-  // Validation Function
-  const validateForm = () => {
-    let newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
-        newErrors[key] = `${key.toUpperCase()} is required`;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSoilDetection = async () => {
-    if (!validateForm()) return; // Stop if validation fails
-
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/ai/soil/crop/recommendation`,
-        {
-          N: formData.nitrogen,
-          P: formData.phosphorus,
-          K: formData.potassium,
-          temp: formData.temp,
-          hum: formData.hum,
-          ph: formData.ph,
-          rain: formData.rain,
-        }
-      );
-
-      if (response.status === 200) {
-        let reco = response.data.response;
-        if (typeof reco === "string") {
-          try {
-            reco = JSON.parse(reco);
-          } catch (e) {
-            console.error("Invalid JSON format from backend:", reco);
-          }
-        }
-        setRecoCrop(reco);
-        navigate("/result", { state: { recoCrop: reco, formData } });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDetect = (recoCrop) => {
-    navigate(`/result`, { state: { formData } });
-  };
 
   // Handle File Upload
   const handleFileChange = (e) => {
@@ -88,9 +38,56 @@ export default function SoilDetection() {
     setErrors({ ...errors, [e.target.name]: "" }); // Clear error on typing
   };
 
+  // ✅ Old flow: Detect from Data → direct navigate
+  const handleDetectFromData = () => {
+    navigate("/result", { state: { formData } });
+  };
+
+  // ✅ Image flow
+  const handleDetectFromImage = () => {
+    navigate("/result", { state: { formData, image: selectedFile } });
+  };
+
+  // ✅ IoT Button
+  const handleIoT = () => {
+    if (!iotClicked) {
+      // First click → fetch IoT data (simulate)
+      const success = Math.random() > 0.5;
+      let newData = {};
+      if (success) {
+        newData = {
+          ph: (Math.random() * 14).toFixed(2),
+          nitrogen: Math.floor(Math.random() * 100),
+          phosphorus: Math.floor(Math.random() * 100),
+          potassium: Math.floor(Math.random() * 100),
+          temp: (20 + Math.random() * 15).toFixed(1),
+          hum: Math.floor(40 + Math.random() * 60),
+          rain: Math.floor(Math.random() * 300),
+        };
+        alert("✅ IoT data received!");
+      } else {
+        newData = {
+          ph: (Math.random() * 14).toFixed(2),
+          nitrogen: Math.floor(Math.random() * 100),
+          phosphorus: Math.floor(Math.random() * 100),
+          potassium: Math.floor(Math.random() * 100),
+          temp: (20 + Math.random() * 15).toFixed(1),
+          hum: Math.floor(40 + Math.random() * 60),
+          rain: Math.floor(Math.random() * 300),
+        };
+        alert("⚠️ IoT device not responding, random values filled!");
+      }
+      setFormData(newData);
+      setIotClicked(true);
+    } else {
+      // Second click → Navigate
+      navigate("/result", { state: { formData } });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-green-50 flex flex-col items-center pt-30 px-4 ">
-      <h1 className="text-3xl font-bold text-green-700 mb-8">
+    <div className="min-h-screen bg-green-50 flex flex-col items-center pt-25 px-4 ">
+      <h1 className="text-3xl font-bold text-green-700 mb-6">
         Soil Detection
       </h1>
 
@@ -119,7 +116,7 @@ export default function SoilDetection() {
       </div>
 
       {/* Content */}
-      <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center">
+      <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center mb-20">
         {activeTab === "image" ? (
           <>
             {/* IMAGE UPLOAD SECTION */}
@@ -171,7 +168,7 @@ export default function SoilDetection() {
             )}
 
             <button
-              onClick={() => handleDetect("image")}
+              onClick={handleDetectFromImage}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Image
@@ -206,11 +203,20 @@ export default function SoilDetection() {
               ))}
             </form>
 
+            {/* Detect from Data → direct next page */}
             <button
-              onClick={handleSoilDetection}
+              onClick={handleDetectFromData}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Data
+            </button>
+
+            {/* ✅ Detect from IoT button */}
+            <button
+              onClick={handleIoT}
+              className="mt-3 w-full  bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
+            >
+              {iotClicked ? "Go to Result" : "Detect from IoT"}
             </button>
           </>
         )}

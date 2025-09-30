@@ -63,41 +63,41 @@ const Choose = () => {
       <div className="px-4 sm:px-6 lg:px-18 mx-auto max-w-7xl mb-7 lg:mb-7">
         {/* Heading */}
         <div className="text-center">
-          <h2 className="relative text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-5 mt-4 text-green-600">
+          <h2 className="relative text-center text-2xl sm:text-3xl md:mt-10 md:text-4xl lg:text-5xl font-serif font-bold mb-5 mt-4 text-green-600">
             WHY CHOOSE US ??
           </h2>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-2 ml-9 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-5 text-center border border-amber-500 md:px-13 md:gap-6">
-          {cards.map((card, index) => {
-            const Icon = card.icon;
-            return (
-              <motion.div
-                key={index}
-                className="relative group rounded-2xl border border-green-700 shadow-[0_8px_30px_rgba(0,255,162,0.2)] p-6 sm:p-8 flex flex-col items-center text-center cursor-pointer"
-                style={{ backgroundColor: card.bg }}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                whileHover="hover"
-                whileTap="hover"
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                {/* Icon */}
-                <Icon className="w-10 h-10 text-green-400 mb-3" />
+       <div className="grid grid-cols-2 ml-9 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-5 text-center md:px-8 md:gap-6">
+  {cards.map((card, index) => {
+    const Icon = card.icon;
+    return (
+      <motion.div
+        key={index}
+        className="relative group rounded-2xl border border-green-700 shadow-[0_8px_30px_rgba(0,255,162,0.2)] p-6 sm:p-8 flex flex-col items-center text-center cursor-pointer h-[150px] sm:h-[400px] md:h-[200px] lg:h-[240px] lg:w-[330px]"
+        style={{ backgroundColor: card.bg }}
+        variants={cardVariants}
+        initial="hidden"
+        whileInView="visible"
+        whileHover="hover"
+        whileTap="hover"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        {/* Icon */}
+        <Icon className="w-10 h-10 text-green-400 mb-3" />
 
-                <h3 className="mt-2 text-base sm:text-lg md:text-lg lg:text-lg font-semibold text-green-400 font-pj">
-                  {card.title}
-                </h3>
-                <p className="mt-3 text-xs sm:text-sm md:text-sm lg:text-sm font-pj">
-                  {card.desc}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
+        <h3 className="mt-2 text-base sm:text-lg md:text-lg lg:text-lg font-semibold text-green-400 font-pj">
+          {card.title}
+        </h3>
+        <p className="mt-3 text-xs sm:text-sm md:text-sm lg:text-sm font-pj">
+          {card.desc}
+        </p>
+      </motion.div>
+    );
+  })}
+</div>
+     </div>
     </section>
   )
 }

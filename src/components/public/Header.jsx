@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from '../../assets/logo/logo.jpg';
+import logo from '../../assets/logo/logo.png';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,7 +25,7 @@ const Header = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white border-gray-200 shadow-md h-18 flex items-center z-50">
+    <nav className="fixed top-0 left-0 w-full bg-white shadow-md h-18 flex items-center z-50">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-3">
         {/* Logo */}
         <a
@@ -85,7 +85,7 @@ const Header = () => {
           }`}
           id="navbar-user"
         >
-          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:space-x-6 lg:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 text-gray-900">
+          <ul className="flex flex-col font-normal p-4 md:p-0 mt-4 rounded-lg md:space-x-6 lg:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 text-gray-900">
             <li>
               <NavLink
                 to="/"
@@ -132,10 +132,11 @@ const Header = () => {
             {/* Services dropdown */}
             <li className="relative" ref={servicesDropdownRef}>
               <button
+                type="button"
                 onClick={() =>
                   setIsServicesDropdownOpen(!isServicesDropdownOpen)
                 }
-                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600"
+                className="flex items-center py-1 px-4 text-gray-900 rounded-sm hover:text-green-600 focus:outline-none"
               >
                 Services
                 <svg
@@ -154,7 +155,7 @@ const Header = () => {
               </button>
 
               {isServicesDropdownOpen && (
-                <ul className="absolute left-0 mt-2 w-56 bg-white border rounded-md shadow-lg">
+                <ul className="absolute left-0 mt-2 w-56 bg-white border rounded-md shadow-lg z-50">
                   <li>
                     <NavLink
                       to="/soil-detection"
@@ -201,7 +202,6 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li>
-                    
                     <NavLink
                       to="/market-price"
                       onClick={() => setIsServicesDropdownOpen(false)}
