@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import ServiceCard from "../components/cards/ServiceCard";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 const serviceData = [
   {
@@ -42,10 +44,13 @@ const serviceData = [
 
 function FarmingSolutions() {
   return (
-    <div className="max-w-full">
+
+
+    <div className="max-w-full bg-gray-50">
       {/* Header Section */}
-      <div className="text-center bg-gray-50 px-4 sm:px-6 lg:px-0 py-8">
-        <div className="flex items-center justify-center space-x-2 mb-4">
+      <div className="px-2 sm:px-6 lg:px-0 pt-10 bg-green-50">
+
+        <div className="flex items-center justify-center space-x-2 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="lucide lucide-sparkles h-6 w-6 text-green-600 animate-pulse"
@@ -82,17 +87,54 @@ function FarmingSolutions() {
             <path d="M17 19h4"></path>
           </svg>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-          Complete Farming Solutions
-        </h2>
-        <p className="text-lg sm:text-xl text-green-700 max-w-xl sm:max-w-3xl mx-auto">
-          From seed to harvest, DigiShivar AI provides comprehensive support for
-          every aspect of modern agriculture
-        </p>
-      </div>
+  <div className="flex items-stretch justify-center gap-6">
 
-      {/* Services Grid with Motion */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:px-22 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pl-11 sm:px-6  py-10 bg-gray-50">
+    {/* Left Animation */}
+    <div className="flex items-center">
+      <DotLottieReact
+        src="https://lottie.host/ac8ddb9f-d59e-4de6-91b0-374ede2c60a7/3gNWp4dbdF.lottie"
+        loop
+        autoplay
+        className="w-80 h-full pb-5 "
+      />
+    </div>
+
+    {/* Center Text Block */}
+    <div className="text-center flex flex-col justify-center max-w-3xl">
+      <motion.h2
+        className="text-3xl sm:text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-green-600 via-teal-400 to-green-500"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2 }}
+      >
+        Complete Farming Solutions
+      </motion.h2>
+      <motion.p
+        className="text-lg sm:text-xl text-green-700"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5 }}
+      >
+        From seed to harvest, DigiShivar AI provides comprehensive support for
+        every aspect of modern agriculture
+      </motion.p>
+    </div>
+
+    {/* Right Animation */}
+    <div className="flex items-center">
+      <DotLottieReact
+        src="https://lottie.host/43571147-8baa-4b09-8a38-67dfd8984d4c/FT6kTMnPth.lottie"
+        loop
+        autoplay
+        className="w-40 h-full pb-5"
+      />
+    </div>
+  </div>
+</div>
+
+
+      {/* Services Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-6 lg:px-12 md:py-0 py-12">
         {serviceData.map((item, idx) => (
           <motion.div
             key={idx}
@@ -100,16 +142,19 @@ function FarmingSolutions() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: idx * 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ scale: 1.05, y: -12, rotate: 1 }}
-            whileTap={{ scale: 1.05, y: -12, rotate: 1 }}
+            whileHover={{ scale: 1.05, y: -8, rotate: 1 }}
+            whileTap={{ scale: 1.05, y: -8, rotate: 1 }}
           >
             <ServiceCard
               name={item.name}
               description={item.description}
               image={item.image}
+              className="bg-gradient-to-br from-green-50 via-teal-50 to-green-100 rounded-xl shadow-md hover:shadow-xl transition p-6 flex flex-col items-center text-center"
             />
           </motion.div>
         ))}
+
+
       </div>
     </div>
   );

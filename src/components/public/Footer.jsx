@@ -1,60 +1,125 @@
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import logo from '../../assets/logo/logo.png'
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-green-700 via-green-800 to-teal-900 text-white py-12 px-6">
+    <footer className=" md:w-screen w-[460px] bg-gradient-to-r from-green-700 via-green-800 to-teal-900 text-white py-12 ">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
         {/* Logo + Description */}
-        <div className="md:col-span-2">
-          <h2 className="text-2xl font-bold mb-4">🌿 AI with Farmer</h2>
+        <div className="md:col-span-2 text-center md:text-left ">
+
+          <div className="flex md:mb-4 ">
+           <img src={logo} alt="" className="h-20 w-20 "/>
+          <h2 className="text-2xl font-bold  mt-5 ">KisanMitra</h2>
+
+          </div>
+          
           <p className="text-sm leading-relaxed">
-            Sed ut perspiciatis unde omnis iste natus error sit amet voluptatem totam rem aperiam.
+            Empowering Indian farmers with AI-based crop advisory, weather updates, and digital market insights to maximize yield and income.
           </p>
-          <p className="mt-4 text-sm">📞 +012 (345) 678 99</p>
+          <p className="mt-4 text-sm">📞 +91 98765 43210</p>
+          <p className="mt-1 text-sm">✉️ support@aifarmer.com</p>
         </div>
 
-        {/* Resources */}
-        <div>
-          <h3 className="font-bold mb-4">Resources</h3>
+        {/* Services */}
+        <div className="text-center md:text-left">
+          <h3 className="font-bold mb-4">Our Services</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#">SaaS Development</a></li>
-            <li><a href="#">Our Products</a></li>
-            <li><a href="#">User Flow</a></li>
-            <li><a href="#">User Strategy</a></li>
+            <li>
+              <a
+                href="/ai-chatbot"
+                className="hover:text-green-300 hover:underline transition duration-300"
+              >
+                AI Crop Advisory
+              </a>
+            </li>
+            <li>
+              <a
+                href="/weather"
+                className="hover:text-green-300 hover:underline transition duration-300"
+              >
+                Weather Forecasting
+              </a>
+            </li>
+            <li>
+              <a
+                href="/soil-detection"
+                className="hover:text-green-300 hover:underline transition duration-300"
+              >
+                Soil Health Analysis
+              </a>
+            </li>
+            <li>
+              <a
+                href="/market-price"
+                className="hover:text-green-300 hover:underline transition duration-300"
+              >
+                Market Price Insights
+              </a>
+            </li>
           </ul>
         </div>
 
         {/* Company */}
-        <div>
+        <div className="text-center md:text-left">
           <h3 className="font-semibold mb-4">Company</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#">About TailGrids</a></li>
-            <li><a href="#">Contact & Support</a></li>
-            <li><a href="#">Success History</a></li>
-            <li><a href="#">Setting & Privacy</a></li>
+            <li>
+              <a href="/" className="hover:text-green-300 hover:underline transition duration-300">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="/contatct" className="hover:text-green-300 hover:underline transition duration-300">
+                Contact & Support
+              </a>
+            </li>
+            <li>
+              <a href="/" className="hover:text-green-300 hover:underline transition duration-300">
+                Team & Careers
+              </a>
+            </li>
+            <li>
+              <a href="/" className="hover:text-green-300 hover:underline transition duration-300">
+                Privacy Policy
+              </a>
+            </li>
           </ul>
         </div>
 
-        {/* Quick Links */}
-        <div>
-          <h3 className="font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
-            <li><a href="#">Premium Support</a></li>
-            <li><a href="#">Our Services</a></li>
-            <li><a href="#">Know Our Team</a></li>
-            <li><a href="#">Download App</a></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Bottom Section */}
-      <div className="mt-8  pt-6 flex flex-col md:flex-row justify-between items-center text-sm">
-        <p>© 2025 TailGrids</p>
-        <div className="flex space-x-4 mt-4 md:mt-0">
-          <a href="#"><FaFacebookF /></a>
-          <a href="#"><FaTwitter /></a>
-          <a href="#"><FaYoutube /></a>
-          <a href="#"><FaInstagram /></a>
+        {/* Social & Bottom */}
+        <div className="flex flex-col items-center justify-center md:items-start md:mb-40 md:justify-end space-y-2">
+          <p>© 2025 AI with Farmer. All rights reserved.</p>
+          <div className="flex space-x-4 mt-2">
+            <a
+              href="#"
+              aria-label="Facebook"
+              className="p-2 rounded-full bg-green-800 hover:bg-green-600 transition transform hover:scale-110"
+            >
+              <FaFacebookF />
+            </a>
+            <a
+              href="#"
+              aria-label="Twitter"
+              className="p-2 rounded-full bg-green-800 hover:bg-green-600 transition transform hover:scale-110"
+            >
+              <FaTwitter />
+            </a>
+            <a
+              href="#"
+              aria-label="YouTube"
+              className="p-2 rounded-full bg-green-800 hover:bg-green-600 transition transform hover:scale-110"
+            >
+              <FaYoutube />
+            </a>
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="p-2 rounded-full bg-green-800 hover:bg-green-600 transition transform hover:scale-110"
+            >
+              <FaInstagram />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

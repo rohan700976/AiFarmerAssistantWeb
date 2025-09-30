@@ -60,7 +60,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white border-gray-200 shadow-md h-18 flex items-center z-50">
+    <nav className="fixed top-0 left-0 w-full bg-white shadow-md h-18 flex items-center z-50">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-3">
         <a href="/" className="flex items-center space-x-3 pl-2 sm:pl-6 lg:pl-8 rtl:space-x-reverse">
           <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Logo" />

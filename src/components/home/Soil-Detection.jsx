@@ -6,7 +6,6 @@ export default function SoilDetection() {
   const [activeTab, setActiveTab] = useState("image");
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [recoCrop, setRecoCrop] = useState([]);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     ph: "7.0", // Default average soil pH in India (editable)
@@ -168,7 +167,7 @@ export default function SoilDetection() {
       </div>
 
       {/* Content */}
-      <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center">
+      <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center mb-20">
         {activeTab === "image" ? (
           <>
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8">
@@ -217,7 +216,7 @@ export default function SoilDetection() {
               </div>
             )}
             <button
-              onClick={() => handleDetect("image")}
+              onClick={handleDetectFromImage}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Image
@@ -252,10 +251,18 @@ export default function SoilDetection() {
               ))}
             </form>
             <button
-              onClick={handleSoilDetection}
+              onClick={handleDetectFromData}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
             >
               Detect from Data
+            </button>
+
+            {/* ✅ Detect from IoT button */}
+            <button
+              onClick={handleIoT}
+              className="mt-3 w-full  bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
+            >
+              {iotClicked ? "Go to Result" : "Detect from IoT"}
             </button>
           </>
         )}
