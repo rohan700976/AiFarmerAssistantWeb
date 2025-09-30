@@ -17,8 +17,6 @@ function Home() {
   return (
     <div className=''>
       <Hero/>
-       <br />
-      
       <FarmingSolutions/>
       {/* <About/> */}
       <Choose/>

@@ -24,6 +24,9 @@ export default {
       borderRadius: {
         xl2: "1rem", // custom radius
       },
+      screens: {
+        'tablet': { 'min': '768px', 'max': '1023px' }, // custom tablet breakpoint
+      },
     },
   },
   plugins: [flowbite],
