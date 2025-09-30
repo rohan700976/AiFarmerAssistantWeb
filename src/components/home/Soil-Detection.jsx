@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function SoilDetection() {
@@ -9,16 +9,70 @@ export default function SoilDetection() {
   const [recoCrop, setRecoCrop] = useState([]);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    ph: "",
+    ph: "7.0", // Default average soil pH in India (editable)
     nitrogen: "",
     phosphorus: "",
     potassium: "",
     temp: "",
     hum: "",
-    rain: "",
+    rain: "0", // Default, will be updated from API
   });
   const [result, setResult] = useState("");
+  const [sensorData, setSensorData] = useState(null); // Latest sensor reading
   const navigate = useNavigate();
+
+  // Fetch live sensor data from backend
+  const fetchSensorData = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Assume stored after login
+      if (!token) throw new Error("No auth token");
+      const response = await axios.get("http://localhost:3000/api/sensor-data", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.length > 0) {
+        const latest = response.data[0]; // Latest reading
+        setSensorData(latest);
+        setFormData((prev) => ({
+          ...prev,
+          temp: latest.temperature.toString(),
+          hum: latest.humidity.toString(),
+          nitrogen: latest.npk?.n?.toString() || "",
+          phosphorus: latest.npk?.p?.toString() || "",
+          potassium: latest.npk?.k?.toString() || "",
+        }));
+      }
+    } catch (error) {
+      console.error("Sensor data fetch error:", error);
+    }
+  };
+
+  // Fetch rainfall from weather API using geolocation
+  const fetchRainfall = async () => {
+    try {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const API_KEY = "YOUR_OPENWEATHERMAP_API_KEY"; // Replace with your free API key from openweathermap.org
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+        );
+        const rain = response.data.rain?.["1h"] || 0; // Rainfall in last hour (mm)
+        setFormData((prev) => ({ ...prev, rain: rain.toString() }));
+      }, (error) => {
+        console.error("Geolocation error:", error);
+        // Fallback: Default rain 0 if permission denied
+      });
+    } catch (error) {
+      console.error("Weather API error:", error);
+    }
+  };
+
+  // Auto-refresh sensor data every 30 seconds and fetch on mount
+  useEffect(() => {
+    fetchSensorData();
+    fetchRainfall(); // Fetch rain once on load
+    const interval = setInterval(fetchSensorData, 30000); // Refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
 
   // Validation Function
   const validateForm = () => {
@@ -33,7 +87,7 @@ export default function SoilDetection() {
   };
 
   const handleSoilDetection = async () => {
-    if (!validateForm()) return; // Stop if validation fails
+    if (!validateForm()) return;
 
     try {
       const response = await axios.post(
@@ -70,11 +124,9 @@ export default function SoilDetection() {
     navigate(`/result`, { state: { formData } });
   };
 
-  // Handle File Upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
-
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result);
@@ -82,17 +134,14 @@ export default function SoilDetection() {
     }
   };
 
-  // Handle Form Input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // Clear error on typing
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   return (
-    <div className="min-h-screen bg-green-50 flex flex-col items-center pt-30 px-4 ">
-      <h1 className="text-3xl font-bold text-green-700 mb-8">
-        Soil Detection
-      </h1>
+    <div className="min-h-screen bg-green-50 flex flex-col items-center pt-30 px-4">
+      <h1 className="text-3xl font-bold text-green-700 mb-8">Soil Detection</h1>
 
       {/* Toggle Tabs */}
       <div className="flex border rounded-xl overflow-hidden mb-6">
@@ -122,7 +171,6 @@ export default function SoilDetection() {
       <div className="w-full max-w-3xl bg-green-80 border border-green-600 shadow-lg rounded-xl p-8 text-center">
         {activeTab === "image" ? (
           <>
-            {/* IMAGE UPLOAD SECTION */}
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8">
               <div className="flex flex-col items-center space-y-4">
                 <svg
@@ -138,10 +186,10 @@ export default function SoilDetection() {
                     d="M3 7v4a1 1 0 001 1h3m10-5h4a1 1 0 011 1v4m-5 10h4a1 1 0 001-1v-4M7 21H3a1 1 0 01-1-1v-4m5-10l5-5m0 0l5 5m-5-5v12"
                   />
                 </svg>
-                <p className="text-lg font-medium text-black ">
+                <p className="text-lg font-medium text-black">
                   Upload soil image for AI diagnosis
                 </p>
-                <p className="text-sm text-gray-700 ">
+                <p className="text-sm text-gray-700">
                   Supported formats: JPG, PNG, WebP (Max 5MB)
                 </p>
                 <input
@@ -159,7 +207,6 @@ export default function SoilDetection() {
                 </label>
               </div>
             </div>
-
             {preview && (
               <div className="mt-6">
                 <img
@@ -169,7 +216,6 @@ export default function SoilDetection() {
                 />
               </div>
             )}
-
             <button
               onClick={() => handleDetect("image")}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
@@ -179,7 +225,7 @@ export default function SoilDetection() {
           </>
         ) : (
           <>
-            {/* FORM INPUT SECTION */}
+            {/* FORM INPUT SECTION with Live Data */}
             <form className="space-y-4 text-left">
               {[
                 "ph",
@@ -197,7 +243,7 @@ export default function SoilDetection() {
                     value={formData[field]}
                     onChange={handleChange}
                     placeholder={field.toUpperCase()}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
+                    className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
                   />
                   {errors[field] && (
                     <p className="text-red-600 text-sm mt-1">{errors[field]}</p>
@@ -205,7 +251,6 @@ export default function SoilDetection() {
                 </div>
               ))}
             </form>
-
             <button
               onClick={handleSoilDetection}
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition"
@@ -215,6 +260,24 @@ export default function SoilDetection() {
           </>
         )}
       </div>
+
+      {/* Live Sensor Data Display */}
+      {sensorData && (
+        <div className="mt-8 bg-green-100 text-green-800 px-6 py-4 rounded-lg shadow max-w-3xl">
+          <h2 className="text-xl font-bold mb-4">Live IoT Sensor Readings (Auto-Refreshing)</h2>
+          <p><strong>Temperature:</strong> {sensorData.temperature} °C</p>
+          <p><strong>Humidity:</strong> {sensorData.humidity} %</p>
+          <p><strong>Moisture:</strong> {sensorData.moisture} %</p>
+          {sensorData.npk && (
+            <>
+              <p><strong>Nitrogen (N):</strong> {sensorData.npk.n} ppm</p>
+              <p><strong>Phosphorus (P):</strong> {sensorData.npk.p} ppm</p>
+              <p><strong>Potassium (K):</strong> {sensorData.npk.k} ppm</p>
+            </>
+          )}
+          <p className="text-sm mt-4">Data last updated: {new Date(sensorData.timestamp).toLocaleString()}</p>
+        </div>
+      )}
 
       {/* RESULT SECTION */}
       {result && (
