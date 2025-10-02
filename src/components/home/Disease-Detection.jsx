@@ -1,10 +1,15 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function DiseaseDetection() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [insights, setInsights] = useState(null);
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const navigate = useNavigate();
@@ -19,6 +24,7 @@ export default function DiseaseDetection() {
     reader.onloadend = () => setPreview(reader.result);
     reader.readAsDataURL(file);
 
+    setCameraActive(false); // Stop camera if file is uploaded
     stopCamera();
   };
 
@@ -61,35 +67,59 @@ export default function DiseaseDetection() {
 
     const ctx = canvasRef.current.getContext("2d");
     ctx.drawImage(videoRef.current, 0, 0, width, height);
-
-    canvasRef.current.toBlob((blob) => {
-      if (!blob) return;
-      const file = new File([blob], "captured_image.png", { type: "image/png" });
-
-      // Save captured file in state
-      setSelectedFile(file);
-
-      // Generate preview
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    }, "image/png");
-
+    const dataUrl = canvasRef.current.toDataURL("image/png");
+    setPreview(dataUrl);
+    setSelectedFile(dataUrl); // Can be sent to backend
     stopCamera();
   };
 
-  // Navigate to Disease Detail
-  const handleDetect = () => {
+  // Backend Integration: Detect Disease
+  const handleDetect = async () => {
     if (!selectedFile) {
       alert("⚠️ Please select or capture an image first!");
       return;
     }
-    navigate("/disease-detail", { state: { file: selectedFile } });
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        `${import.meta.env.VITE_URL}/predict_disease`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      const resultData = res.data;
+      let parsedInsights = {};
+
+      try {
+        if (resultData.ai_insights?.ai_text) {
+          let cleanText = resultData.ai_insights.ai_text;
+          cleanText = cleanText.replace(/```json/g, "").replace(/```/g, "").trim();
+          parsedInsights = JSON.parse(cleanText);
+        }
+      } catch (error) {
+        console.error("❌ Error parsing ai_text:", error);
+      }
+
+      setPrediction(resultData.prediction);
+      setInsights(parsedInsights);
+
+    } catch (error) {
+      console.error("Detection error:", error);
+      alert("⚠️ Disease detection failed!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-100 to-green-50 p-4">
-      <div className="max-w-4xl h-[550px] mx-auto bg-white rounded-2xl shadow-xl p-6 mt-20">
+    <div className="min-h-screen  bg-gradient-to-br from-green-100 to-green-50 p-4">
+      <div className="max-w-4xl h-[400px] mx-auto bg-white rounded-2xl shadow-xl p-6 mt-40">
         <h1 className="text-3xl font-bold text-green-700 mb-8 text-center mt-10">
           🌱 Plant Disease Detection
         </h1>
@@ -172,10 +202,49 @@ export default function DiseaseDetection() {
 
         <button
           onClick={handleDetect}
-          className="w-full md:w-1/2 mx-auto block px-6 py-3 bg-green-700 text-white font-semibold rounded-lg shadow hover:bg-green-800 transition"
+          disabled={loading}
+          className="w-full md:w-1/2 mx-auto block px-6 py-3 bg-green-700 text-white font-semibold rounded-lg shadow hover:bg-green-800 transition disabled:opacity-50 mb-6"
         >
-          Detect Disease
+          {loading ? "Detecting..." : "Detect Disease"}
         </button>
+
+        {/* Dynamic Results */}
+        {prediction && insights && (
+          <div className="bg-green-50 p-6 rounded-xl shadow-md mt-6">
+            <h2 className="text-2xl font-bold text-green-700 mb-4">{prediction.class_name}</h2>
+            <p className="text-gray-700 mb-4">{prediction.description}</p>
+
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">What is this?</h3>
+            <p className="text-gray-700 mb-4">{insights.what_is_this}</p>
+
+            {insights.causes && (
+              <>
+                <h3 className="text-lg font-semibold text-red-600 mb-2">Causes</h3>
+                <ul className="list-disc list-inside mb-4 text-gray-700">
+                  {insights.causes.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </>
+            )}
+
+            {insights.treatment && (
+              <>
+                <h3 className="text-lg font-semibold text-blue-600 mb-2">Treatment</h3>
+                <ul className="list-disc list-inside mb-4 text-gray-700">
+                  {insights.treatment.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </>
+            )}
+
+            {insights.prevention && (
+              <>
+                <h3 className="text-lg font-semibold text-purple-600 mb-2">Prevention</h3>
+                <ul className="list-disc list-inside text-gray-700">
+                  {insights.prevention.map((item, i) => <li key={i}>{item}</li>)}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
 
         <canvas ref={canvasRef} className="hidden" />
       </div>
