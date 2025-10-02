@@ -3,54 +3,68 @@ import axios from "axios";
 import WeatherCard from "../components/cards/WeatherCard";
 import WeatherDayCard from "../components/cards/WeatherDayCard";
 
-function Weather() {
+function Weather({ city = "haridwar" }) {  // City ko prop se le sakte ho, default Haridwar
   const [next7Days, setNext7Days] = useState([]);
   const [prev7Days, setPrev7Days] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const handleWeatherReport = async () => {
       try {
         setLoading(true);
+        setError(null);  // Reset error on retry
 
         // ✅ Fetch next 7 days
         const response = await axios.get(
-          `${import.meta.env.VITE_URL}/weather/next/7days?city=haridwar`
+          `${import.meta.env.VITE_URL}/weather/next/7days?city=${city}`
         );
-        if (response.status === 200) {
-          setNext7Days(response.data.slice(0, 7));
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setNext7Days(response.data);
         }
 
         // ✅ Fetch previous 7 days
         const res = await axios.get(
-          `${import.meta.env.VITE_URL}/weather/previous/7days?city=haridwar`
+          `${import.meta.env.VITE_URL}/weather/previous/7days?city=${city}`
         );
-        if (res.status === 200) {
-          console.log(res.data);
-          setPrev7Days(res.data);
+        if (res.status === 200 && Array.isArray(res.data)) {
+          // Reverse previous data to show most recent first (e.g., Yesterday before older days)
+          setPrev7Days([...res.data].reverse());
         }
       } catch (error) {
         console.error("Error fetching weather:", error);
+        setError("Failed to fetch weather data. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    handleWeatherReport();
-  }, []);
+    if (city) {  // Only fetch if city is valid
+      handleWeatherReport();
+    }
+  }, [city]);  // Re-fetch if city changes
 
-  // ✅ Function to get day name
-  const getDayName = (datetime, idx) => {
-    if (idx === 0) return "Today";
+  const getDayName = (datetime) => {
     const date = new Date(datetime);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Normalize to start of day
+
+    const diffTime = date - today;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
+    if (diffDays === -1) return "Yesterday";
+    if (diffDays > 0) return `Day +${diffDays}`;
+    if (diffDays < 0) return `Day ${Math.abs(diffDays)} ago`;
+
+    // Fallback to short weekday
     return date.toLocaleDateString("en-US", { weekday: "short" });
   };
 
-  // ✅ Function to get weather icon based on conditions
   const getWeatherIcon = (condition) => {
     if (!condition) return "https://unpkg.com/lucide-static/icons/cloud.svg";
     const lower = condition.toLowerCase();
-
     if (lower.includes("rain"))
       return "https://unpkg.com/lucide-static/icons/cloud-rain.svg";
     if (lower.includes("cloud"))
@@ -61,183 +75,62 @@ function Weather() {
       return "https://unpkg.com/lucide-static/icons/cloud-snow.svg";
     if (lower.includes("storm") || lower.includes("thunder"))
       return "https://unpkg.com/lucide-static/icons/cloud-lightning.svg";
-
     return "https://unpkg.com/lucide-static/icons/cloud.svg";
   };
+
+  const renderSection = (title, data, isNext = true) => (
+    <div className="bg-sky-100 mt-8">
+      <h1 className="text-center text-3xl font-bold my-2 py-5">
+        {title}
+      </h1>
+      {data.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 px-6">
+          {data.map((dayData, idx) => (
+            <WeatherDayCard
+              key={idx}
+              day={getDayName(dayData.date)}
+              temp={dayData.temp}
+              humidity={dayData.humidity}
+              wind={dayData.wind}
+              sunrise={dayData.sunrise}
+              sunset={dayData.sunset}
+              icon={getWeatherIcon(dayData.condition)}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center py-4 text-gray-500">No data available for this section.</p>
+      )}
+    </div>
+  );
 
   return (
     <>
       {loading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="w-12 h-12 border-4 border-blue-400 border-dashed rounded-full animate-spin"></div>
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+          <span className="ml-2 text-lg">Loading weather...</span>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center min-h-screen bg-gray-50">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       ) : (
-        next7Days.length > 0 &&
-        prev7Days.length > 0 && (
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mt-22">
-              {/* Left Section */}
-              <div className="lg:col-span-2 flex flex-col">
-                {/* Current Weather */}
-                <div className="flex items-center space-x-6 mb-8">
-                  <div className="bg-gradient-to-br from-blue-100 to-indigo-100 p-6 rounded-2xl animate-float">
-                    <img
-                      src={getWeatherIcon(next7Days[0].conditions)}
-                      alt="weather-icon"
-                      className="h-16 w-16"
-                    />
-                  </div>
-                  <div>
-                    <div className="text-5xl font-bold text-gray-900 mb-2">
-                      {next7Days[0].temp}°C
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Feels like {next7Days[0].temp}°C
-                    </div>
-                  </div>
-                </div>
+        <div className="p-8">
+          {/* Next 7 Days Forecast */}
+          {renderSection("Next 7 Days Weather Report", next7Days)}
 
-                {/* Weather Stats Grid */}
-                <div className="grid grid-cols-4 md:grid-cols-4 gap-4 mb-8">
-                  <WeatherCard
-                    name="Humidity"
-                    value={next7Days[0].humidity}
-                    image="https://unpkg.com/lucide-static/icons/droplets.svg"
-                  />
-                  <WeatherCard
-                    name="Wind"
-                    value={`${next7Days[0].wind} Km/h`}
-                    image="https://unpkg.com/lucide-static/icons/wind.svg"
-                  />
-                  <WeatherCard
-                    name="Visibility"
-                    value={`${next7Days[0].visibility} Km`}
-                    image="https://unpkg.com/lucide-static/icons/eye.svg"
-                  />
-                  <WeatherCard
-                    name="UV Index"
-                    value={next7Days[0].uvindex}
-                    image="https://unpkg.com/lucide-static/icons/sun.svg"
-                  />
-                  <WeatherCard
-                    name="Pressure"
-                    value={`${next7Days[0].pressure} hpa`}
-                    image="https://unpkg.com/lucide-static/icons/gauge.svg"
-                  />
-                  <WeatherCard
-                    name="Feels Like"
-                    value={`${next7Days[0].temp} °C`}
-                    image="https://unpkg.com/lucide-static/icons/thermometer.svg"
-                  />
-                  <WeatherCard
-                    name="Sunrise"
-                    value={next7Days[0].sunrise}
-                    image="https://unpkg.com/lucide-static/icons/sunrise.svg"
-                  />
-                  <WeatherCard
-                    name="Sunset"
-                    value={next7Days[0].sunset}
-                    image="https://unpkg.com/lucide-static/icons/sunset.svg"
-                  />
-                </div>
-              </div>
-
-              {/* Right Section */}
-              <div className="flex flex-col">
-                <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-green-600 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                  </svg>
-                  Farming Recommendations
-                </h4>
-                <div className="space-y-4 overflow-y-auto pr-2 flex-1">
-                  <div className="border-l-4 p-4 rounded-r-lg border-l-yellow-500 bg-yellow-50 transition-all hover:shadow-md transform duration-200">
-                    <div className="flex items-start space-x-3">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-yellow-500"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
-                        <path d="M12 9v4"></path>
-                        <path d="M12 17h.01"></path>
-                      </svg>
-                      <div className="flex-1">
-                        <h5 className="font-semibold text-gray-900 mb-1">
-                          High humidity alert
-                        </h5>
-                        <p className="text-sm text-gray-700 mb-2">
-                          Monitor crops for fungal diseases and improve
-                          ventilation
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-gray-500">
-                            Check crops twice daily
-                          </span>
-                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            medium priority
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* More recommendations here */}
-                </div>
-              </div>
-            </div>
-
-            {/* Next 7 Days Forecast */}
-            <div className="bg-sky-100 h-105 mt-8">
-              <h1 className="text-center text-3xl font-bold my-2 py-5">
-                Next 7 Days Weather Report
-              </h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 px-6 mt-auto">
-                {next7Days.map((dayData, idx) => (
-                  <WeatherDayCard
-                    key={idx}
-                    day={getDayName(dayData.date)}
-                    temp={dayData.temp}
-                    humidity={dayData.humidity}
-                    wind={dayData.wind}
-                    sunrise={dayData.sunrise}
-                    sunset={dayData.sunset}
-                    icon={getWeatherIcon(dayData.condition)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Previous 7 Days Forecast */}
-            <div className="bg-sky-100 h-105 mt-8">
-              <h1 className="text-center text-3xl font-bold my-2 py-5">
-                Previous 7 Days Weather Report
-              </h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 px-6 mt-auto">
-                {prev7Days.map((dayData, idx) => (
-                  <WeatherDayCard
-                    key={idx}
-                    day={getDayName(dayData.date)}
-                    temp={dayData.temp}
-                    humidity={dayData.humidity}
-                    wind={dayData.wind}
-                    sunrise={dayData.sunrise}
-                    sunset={dayData.sunset}
-                    icon={getWeatherIcon(dayData.condition)}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )
+          {/* Previous 7 Days Report */}
+          {renderSection("Previous 7 Days Weather Report", prev7Days, false)}
+        </div>
       )}
     </>
   );
