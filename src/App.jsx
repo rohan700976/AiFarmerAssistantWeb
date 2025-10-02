@@ -18,8 +18,8 @@ import DesireCrop from './services/DesireCrop';
 import DiseaseDetails from './pages/DiseaseDetails';
 import Login from './Auth/Login';
 import SignUp from './Auth/SignUp';
-import ForgotPassword from './Auth/ForgotPassword'; // New
-import Dashboard from './pages/Dashboard'; // New
+import ForgotPassword from './Auth/ForgotPassword'; 
+// import Dashboard from './pages/Dashboard'; // New
 import MicButton from './pages/MicButton';
 import History from './pages/history';  
 
@@ -46,7 +46,7 @@ function App() {
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           <Route path="/history" element={<History />} />
         </Route>
       </Routes>

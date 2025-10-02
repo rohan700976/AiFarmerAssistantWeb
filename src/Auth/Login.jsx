@@ -22,7 +22,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/api/login', { email, password });
+      const res = await axios.post('http://localhost:8000/auth/login', { email, password });
       if (res.status === 200) {
         localStorage.setItem('token', res.data.token);
         setMessage('Login successful');
@@ -41,11 +41,12 @@ export default function Login() {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/api/verify-otp', { email, otp });
+      const res = await axios.post('http://localhost:8000/auth/verify-otp', { email, otp });
       setMessage(res.data.message);
       // Retry login after verification
-      const loginRes = await axios.post('http://localhost:3000/api/login', { email, password });
+      const loginRes = await axios.post('http://localhost:8000/auth/login', { email, password });
       localStorage.setItem('token', loginRes.data.token);
+      console.log(loginRes);
       setMessage('Login successful');
       setTimeout(() => navigate('/'), 1000); // Redirect after login
     } catch (err) {
@@ -59,7 +60,7 @@ export default function Login() {
       return;
     }
     try {
-      const res = await axios.post('http://localhost:3000/api/resend-verification', { email });
+      const res = await axios.post('http://localhost:8000/auth/resend-verification', { email });
       setMessage(res.data.message);
     } catch (err) {
       setMessage(err.response?.data.message || 'Error resending verification');

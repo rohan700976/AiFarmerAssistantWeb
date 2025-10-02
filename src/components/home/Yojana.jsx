@@ -1,7 +1,7 @@
 import React from "react";
 import Slider from "react-slick";
 import { motion } from "framer-motion";
-import CountUp from "react-countup";
+// import CountUp from "react-countup";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -127,7 +127,7 @@ function Yojana() {
                     <div>
                       <p className="text-[10px] sm:text-xs text-gray-500">Beneficiaries</p>
                       <p className="text-sm sm:text-base font-medium text-green-700">
-                        <CountUp end={s.beneficiaries} duration={2} separator="," /> farmers
+                        {/* <CountUp end={s.beneficiaries} duration={2} separator="," /> farmers */}
                       </p>
                     </div>
                   </div>

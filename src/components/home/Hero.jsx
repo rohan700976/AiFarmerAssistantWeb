@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 
 function Hero() {
   return (
-
-    <div className="relative h-screen w-[455px] overflow-hidden md:w-full  ">
-
+    <div className="relative h-screen w-[455px] overflow-hidden md:w-full">
       {/* Background Video */}
       <video
         src="https://www.pexels.com/download/video/3266800/"
@@ -16,8 +14,7 @@ function Hero() {
         className="absolute top-0 left-0 h-full w-full object-cover"
       />
 
-
-      <div className="absolute  inset-0 flex flex-col items-center justify-center text-center text-white bg-black/50 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white bg-black/50 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Main Title with Gradient Animation */}
         <motion.h1
@@ -42,7 +39,7 @@ function Hero() {
         </motion.h1>
 
         {/* Subtitle with Gradient + Glow Animation */}
-
+        <motion.h2
           className="text-xl md:text-3xl xl:text-4xl font-semibold mt-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -86,26 +83,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.3 }}
         >
-          {/* Rotating Border */}
-          {/* <motion.div
-            className="absolute inset-0 rounded-full border-4 border-transparent"
-            style={{
-              background:
-                "conic-gradient(from 0deg, #22c55e, #3b82f6, #a855f7, #22c55e)",
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          ></motion.div> */}
-
-
-          
-
-          {/* Button */}
-          <button className="relative  px-10 py-3 bg-green-600 text-white font-semibold text-lg rounded-full shadow-lg hover:bg-green-700 transition">
+          <button className="relative px-10 py-3 bg-green-600 text-white font-semibold text-lg rounded-full shadow-lg hover:bg-green-700 transition">
             Explore
           </button>
         </motion.div>
