@@ -1,12 +1,23 @@
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import logo from '../../assets/logo/logo.png'
 
 function Footer() {
   return (
     <footer className="w-full bg-gradient-to-r from-green-700 via-green-800 to-teal-900 text-white py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {/* Logo + Description */}
-        <div className="col-span-1 md:col-span-2 lg:col-span-2 text-left">
-          <h2 className="text-2xl font-bold mb-4">🌿 AI with Farmer</h2>
+
+
+        <div className="md:col-span-2 text-center md:text-left ">
+
+          <div className="flex md:mb-4 ">
+           <img src={logo} alt="" className="h-20 w-20 "/>
+          <h2 className="text-2xl font-bold  mt-5 ">KisanMitra</h2>
+
+          </div>
+
+
+
           <p className="text-sm leading-relaxed">
             Empowering Indian farmers with AI-based crop advisory, weather updates, and digital market insights to maximize yield and income.
           </p>

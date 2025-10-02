@@ -1,5 +1,7 @@
 import React from "react";
 import Slider from "react-slick";
+import { motion } from "framer-motion";
+import CountUp from "react-countup";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -61,8 +63,6 @@ function Yojana() {
     },
   ];
 
-  const fmt = (n) => new Intl.NumberFormat("en-IN").format(n);
-
   // Slider settings
   const settings = {
     dots: true,
@@ -73,24 +73,15 @@ function Yojana() {
     autoplay: true,
     autoplaySpeed: 2500,
     responsive: [
-      {
-        breakpoint: 1024, // tablets
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 650, // mobiles
-        settings: {
-          slidesToShow: 1,
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 650, settings: { slidesToShow: 1 } },
     ],
   };
 
   return (
     <section className="py-8 px-3 sm:px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
+        {/* Heading */}
         <div className="mb-6 text-center">
           <h2 className="text-xl sm:text-3xl lg:text-4xl font-semibold text-green-800 font-serif">
             Top Government Schemes Helping Indian Farmers
@@ -104,40 +95,44 @@ function Yojana() {
         <Slider {...settings}>
           {schemes.map((s) => (
             <div key={s.id} className="px-2 sm:px-3">
-              <article className="bg-white flex flex-col h-full min-h-[340px] md:min-h-[380px] lg:min-h-[400px] rounded-2xl shadow-sm overflow-hidden border border-gray-200">
-                {/* Image Section */}
+              <motion.article
+                className="bg-white flex flex-col h-full min-h-[340px] md:min-h-[380px] lg:min-h-[400px] rounded-2xl shadow-lg border border-gray-200 overflow-hidden cursor-pointer"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5, scale: 1.05, boxShadow: "0 20px 40px rgba(0,255,162,0.2)" }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                {/* Image */}
                 <div className="relative h-40 sm:h-48 md:h-52 lg:h-56 w-full overflow-hidden">
                   <img
                     src={s.image}
                     alt={s.name}
-                    className="w-full h-full object-cover transform hover:scale-105 transition duration-500"
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
                   <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-green-600 text-white text-[10px] sm:text-xs font-medium px-2 py-1 rounded">
                     {s.tag}
                   </span>
                 </div>
 
-                {/* Content Section */}
+                {/* Content */}
                 <div className="p-3 sm:p-5 flex flex-col flex-grow">
-                  <h3 className="text-base sm:text-lg font-semibold leading-tight">
+                  <h3 className="text-base sm:text-lg font-semibold leading-tight  text-green-900">
                     {s.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-2 mb-3 sm:mb-4 flex-grow">
                     {s.desc}
                   </p>
-
                   <div className="flex items-center justify-between mt-auto">
                     <div>
-                      <p className="text-[10px] sm:text-xs text-gray-500">
-                        Beneficiaries
-                      </p>
-                      <p className="text-sm sm:text-base font-medium">
-                        {fmt(s.beneficiaries)} farmers
+                      <p className="text-[10px] sm:text-xs text-gray-500">Beneficiaries</p>
+                      <p className="text-sm sm:text-base font-medium text-green-700">
+                        <CountUp end={s.beneficiaries} duration={2} separator="," /> farmers
                       </p>
                     </div>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             </div>
           ))}
         </Slider>
