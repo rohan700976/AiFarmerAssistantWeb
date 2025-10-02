@@ -2,10 +2,10 @@ import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 
 function Footer() {
   return (
-    <footer className=" md:w-screen w-[460px] bg-gradient-to-r from-green-700 via-green-800 to-teal-900 text-white py-12 ">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
+    <footer className="w-full bg-gradient-to-r from-green-700 via-green-800 to-teal-900 text-white py-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {/* Logo + Description */}
-        <div className="md:col-span-2 text-center md:text-left">
+        <div className="col-span-1 md:col-span-2 lg:col-span-2 text-left">
           <h2 className="text-2xl font-bold mb-4">🌿 AI with Farmer</h2>
           <p className="text-sm leading-relaxed">
             Empowering Indian farmers with AI-based crop advisory, weather updates, and digital market insights to maximize yield and income.
@@ -15,7 +15,7 @@ function Footer() {
         </div>
 
         {/* Services */}
-        <div className="text-center md:text-left">
+        <div className="col-span-1 text-left">
           <h3 className="font-bold mb-4">Our Services</h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -54,7 +54,7 @@ function Footer() {
         </div>
 
         {/* Company */}
-        <div className="text-center md:text-left">
+        <div className="col-span-1 text-left">
           <h3 className="font-semibold mb-4">Company</h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -81,7 +81,7 @@ function Footer() {
         </div>
 
         {/* Social & Bottom */}
-        <div className="flex flex-col items-center justify-center md:items-start md:mb-40 md:justify-end space-y-2">
+        <div className="col-span-1 md:col-span-2 lg:col-span-1 flex flex-col items-start justify-end space-y-2">
           <p>© 2025 AI with Farmer. All rights reserved.</p>
           <div className="flex space-x-4 mt-2">
             <a

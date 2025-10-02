@@ -20,7 +20,7 @@ function Home() {
        <br />
       
       <FarmingSolutions/>
-      {/* <About/> */}
+      <About/>
       <Choose/>
       {/* <HowItWorks/> */}
       <Yojana/>

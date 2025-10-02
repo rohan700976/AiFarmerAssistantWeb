@@ -19,18 +19,63 @@ export default function SoilDetection() {
   });
   const [result, setResult] = useState("");
   const navigate = useNavigate();
-
-  // Validation Function
+  
   const validateForm = () => {
     let newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
-        newErrors[key] = `${key.toUpperCase()} is required`;
-      }
-    });
+
+    // pH validation (4.5 - 9.0)
+    if (!formData.ph) {
+      newErrors.ph = "pH is required";
+    } else if (formData.ph < 4.5 || formData.ph > 9.0) {
+      newErrors.ph = "pH must be between 4.5 and 9.0";
+    }
+
+    // Nitrogen validation (10 - 120)
+    if (!formData.nitrogen) {
+      newErrors.nitrogen = "Nitrogen is required";
+    } else if (formData.nitrogen < 10 || formData.nitrogen > 120) {
+      newErrors.nitrogen = "Nitrogen must be between 10 and 120";
+    }
+
+    // Phosphorus validation (5 - 90)
+    if (!formData.phosphorus) {
+      newErrors.phosphorus = "Phosphorus is required";
+    } else if (formData.phosphorus < 5 || formData.phosphorus > 90) {
+      newErrors.phosphorus = "Phosphorus must be between 5 and 90";
+    }
+
+    // Potassium validation (10 - 150)
+    if (!formData.potassium) {
+      newErrors.potassium = "Potassium is required";
+    } else if (formData.potassium < 10 || formData.potassium > 150) {
+      newErrors.potassium = "Potassium must be between 10 and 150";
+    }
+
+    // Temperature validation (5 - 50 °C)
+    if (!formData.temp) {
+      newErrors.temp = "Temperature is required";
+    } else if (formData.temp < 5 || formData.temp > 50) {
+      newErrors.temp = "Temperature must be between 5 and 50 °C";
+    }
+
+    // Humidity validation (10 - 100 %)
+    if (!formData.hum) {
+      newErrors.hum = "Humidity is required";
+    } else if (formData.hum < 10 || formData.hum > 100) {
+      newErrors.hum = "Humidity must be between 10 and 100 %";
+    }
+
+    // Rainfall validation (50 - 3000 mm)
+    if (!formData.rain) {
+      newErrors.rain = "Rainfall is required";
+    } else if (formData.rain < 50 || formData.rain > 3000) {
+      newErrors.rain = "Rainfall must be between 50 and 3000 mm";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
 
   const handleSoilDetection = async () => {
     if (!validateForm()) return; // Stop if validation fails
@@ -98,21 +143,19 @@ export default function SoilDetection() {
       <div className="flex border rounded-xl overflow-hidden mb-6">
         <button
           onClick={() => setActiveTab("image")}
-          className={`px-6 py-3 text-sm font-medium transition ${
-            activeTab === "image"
-              ? "bg-green-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
+          className={`px-6 py-3 text-sm font-medium transition ${activeTab === "image"
+            ? "bg-green-600 text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
         >
           AI Image Analysis
         </button>
         <button
           onClick={() => setActiveTab("form")}
-          className={`px-6 py-3 text-sm font-medium transition ${
-            activeTab === "form"
-              ? "bg-green-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
+          className={`px-6 py-3 text-sm font-medium transition ${activeTab === "form"
+            ? "bg-green-600 text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
         >
           Enter Soil Data
         </button>
@@ -181,30 +224,131 @@ export default function SoilDetection() {
           <>
             {/* FORM INPUT SECTION */}
             <form className="space-y-4 text-left">
-              {[
-                "ph",
-                "nitrogen",
-                "phosphorus",
-                "potassium",
-                "temp",
-                "hum",
-                "rain",
-              ].map((field) => (
-                <div key={field}>
-                  <input
-                    type="number"
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    placeholder={field.toUpperCase()}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300  text-gray-950"
-                  />
-                  {errors[field] && (
-                    <p className="text-red-600 text-sm mt-1">{errors[field]}</p>
-                  )}
-                </div>
-              ))}
+              {/* Soil pH */}
+              <div>
+                <input
+                  type="number"
+                  name="ph"
+                  value={formData.ph}
+                  onChange={handleChange}
+                  placeholder="pH (4.5 - 9.0)"
+                  min="4.5"
+                  max="9.0"
+                  step="0.1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.ph && <p className="text-red-600 text-sm mt-1">{errors.ph}</p>}
+              </div>
+
+              {/* Nitrogen */}
+              <div>
+                <input
+                  type="number"
+                  name="nitrogen"
+                  value={formData.nitrogen}
+                  onChange={handleChange}
+                  placeholder="Nitrogen (10 - 120 kg/ha)"
+                  min="10"
+                  max="120"
+                  step="1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.nitrogen && (
+                  <p className="text-red-600 text-sm mt-1">{errors.nitrogen}</p>
+                )}
+              </div>
+
+              {/* Phosphorus */}
+              <div>
+                <input
+                  type="number"
+                  name="phosphorus"
+                  value={formData.phosphorus}
+                  onChange={handleChange}
+                  placeholder="Phosphorus (5 - 90 kg/ha)"
+                  min="5"
+                  max="90"
+                  step="1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.phosphorus && (
+                  <p className="text-red-600 text-sm mt-1">{errors.phosphorus}</p>
+                )}
+              </div>
+
+              {/* Potassium */}
+              <div>
+                <input
+                  type="number"
+                  name="potassium"
+                  value={formData.potassium}
+                  onChange={handleChange}
+                  placeholder="Potassium (10 - 150 kg/ha)"
+                  min="10"
+                  max="150"
+                  step="1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.potassium && (
+                  <p className="text-red-600 text-sm mt-1">{errors.potassium}</p>
+                )}
+              </div>
+
+              {/* Temperature */}
+              <div>
+                <input
+                  type="number"
+                  name="temp"
+                  value={formData.temp}
+                  onChange={handleChange}
+                  placeholder="Temperature (5 - 50 °C)"
+                  min="5"
+                  max="50"
+                  step="0.5"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.temp && (
+                  <p className="text-red-600 text-sm mt-1">{errors.temp}</p>
+                )}
+              </div>
+
+              {/* Humidity */}
+              <div>
+                <input
+                  type="number"
+                  name="hum"
+                  value={formData.hum}
+                  onChange={handleChange}
+                  placeholder="Humidity (10% - 100%)"
+                  min="10"
+                  max="100"
+                  step="1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.hum && (
+                  <p className="text-red-600 text-sm mt-1">{errors.hum}</p>
+                )}
+              </div>
+
+              {/* Rainfall */}
+              <div>
+                <input
+                  type="number"
+                  name="rain"
+                  value={formData.rain}
+                  onChange={handleChange}
+                  placeholder="Rainfall (50 - 3000 mm)"
+                  min="50"
+                  max="3000"
+                  step="1"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-green-300 text-gray-950"
+                />
+                {errors.rain && (
+                  <p className="text-red-600 text-sm mt-1">{errors.rain}</p>
+                )}
+              </div>
             </form>
+
 
             <button
               onClick={handleSoilDetection}
