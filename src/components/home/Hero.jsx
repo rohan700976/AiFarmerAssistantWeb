@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 
 function Hero() {
   return (
+
     <div className="relative h-screen w-[455px] overflow-hidden md:w-full  ">
+
       {/* Background Video */}
       <video
         src="https://www.pexels.com/download/video/3266800/"
@@ -14,7 +16,7 @@ function Hero() {
         className="absolute top-0 left-0 h-full w-full object-cover"
       />
 
-      {/* Overlay */}
+
       <div className="absolute  inset-0 flex flex-col items-center justify-center text-center text-white bg-black/50 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Main Title with Gradient Animation */}
@@ -40,7 +42,7 @@ function Hero() {
         </motion.h1>
 
         {/* Subtitle with Gradient + Glow Animation */}
-        <motion.h2
+
           className="text-xl md:text-3xl xl:text-4xl font-semibold mt-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}

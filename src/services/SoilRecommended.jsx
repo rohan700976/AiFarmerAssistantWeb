@@ -7,7 +7,16 @@ import { motion, AnimatePresence } from "framer-motion";
 function SoilRecommended() {
   const location = useLocation();
   const { recoCrop = [], formData = {} } = location.state || {};
-
+  const [soilInput, setSoilInput] = useState({
+    ph: formData.ph,
+    N: formData.nitrogen,
+    P: formData.phosphorus,
+    K: formData.potassium,
+    temp: formData.temp,
+    hum: formData.hum,
+    rain: formData.rain,
+  });
+  console.log(soilInput);
   const [defination, setDefination] = useState("");
   const [soilData, setSoilData] = useState([]);
   const [fertilizerName, setFertilizerName] = useState("");
@@ -37,8 +46,9 @@ function SoilRecommended() {
       );
       if (defination.status === 200) setDefination(defination.data.response);
 
-      const soil_param = await axios.get(
-        `${import.meta.env.VITE_URL}/ai/crop/soil_comparison/${cropName}`
+      const soil_param = await axios.post(
+        `${import.meta.env.VITE_URL}/ai/crop/soil_comparison/${cropName}`,
+          soilInput
       );
       if (soil_param.status === 200) {
         const parsed = parseMarkdownTable(soil_param.data.response);
